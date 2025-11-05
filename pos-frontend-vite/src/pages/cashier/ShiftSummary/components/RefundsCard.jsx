@@ -24,7 +24,7 @@ const RefundsCard = ({ shiftData }) => {
                   <TableCell className="font-medium">RFD-{refund.id}</TableCell>
                   <TableCell>ORD-{refund.orderId}</TableCell>
                   <TableCell>{refund.reason}</TableCell>
-                  <TableCell className="text-right text-destructive">₹{refund.amount?.toFixed(2)|| 999}</TableCell>
+                  <TableCell className="text-right text-destructive">${refund.amount?.toFixed(2)|| 999}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

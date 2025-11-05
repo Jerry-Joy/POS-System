@@ -57,7 +57,7 @@
         <!-- Sales Today -->
         <rect width="175" height="100" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1" />
         <text x="20" y="30" font-family="Arial" font-size="14" fill="#64748b">Sales Today</text>
-        <text x="20" y="60" font-family="Arial" font-size="24" font-weight="bold" fill="#1e293b">₹24,500</text>
+        <text x="20" y="60" font-family="Arial" font-size="24" font-weight="bold" fill="#1e293b">$24,500</text>
         <text x="20" y="80" font-family="Arial" font-size="12" fill="#10b981">+15% from yesterday</text>
         
         <!-- Orders -->
@@ -122,7 +122,7 @@
         <text x="20" y="55" font-family="Arial" font-size="12" fill="#1e293b">#ORD-5289</text>
         <text x="120" y="55" font-family="Arial" font-size="12" fill="#1e293b">Rajesh Kumar</text>
         <text x="250" y="55" font-family="Arial" font-size="12" fill="#64748b">Today, 2:30 PM</text>
-        <text x="350" y="55" font-family="Arial" font-size="12" fill="#1e293b">₹1,200</text>
+        <text x="350" y="55" font-family="Arial" font-size="12" fill="#1e293b">$1,200</text>
         <rect x="450" y="45" width="60" height="20" rx="10" fill="#dcfce7" />
         <text x="480" y="58" font-family="Arial" font-size="10" text-anchor="middle" fill="#15803d">Completed</text>
         
@@ -131,7 +131,7 @@
         <text x="20" y="85" font-family="Arial" font-size="12" fill="#1e293b">#ORD-5288</text>
         <text x="120" y="85" font-family="Arial" font-size="12" fill="#1e293b">Priya Sharma</text>
         <text x="250" y="85" font-family="Arial" font-size="12" fill="#64748b">Today, 1:45 PM</text>
-        <text x="350" y="85" font-family="Arial" font-size="12" fill="#1e293b">₹3,400</text>
+        <text x="350" y="85" font-family="Arial" font-size="12" fill="#1e293b">$3,400</text>
         <rect x="450" y="75" width="60" height="20" rx="10" fill="#dcfce7" />
         <text x="480" y="88" font-family="Arial" font-size="10" text-anchor="middle" fill="#15803d">Completed</text>
       </g>

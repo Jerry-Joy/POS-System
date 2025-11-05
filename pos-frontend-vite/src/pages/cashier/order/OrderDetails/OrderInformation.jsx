@@ -21,7 +21,7 @@ const OrderInformation = ({selectedOrder}) => {
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Total Amount:</span>
                 <span className="font-semibold">
-                  ₹{selectedOrder.totalAmount?.toFixed(2) || "0.00"}
+                  ${selectedOrder.totalAmount?.toFixed(2) || "0.00"}
                 </span>
               </div>
             </div>

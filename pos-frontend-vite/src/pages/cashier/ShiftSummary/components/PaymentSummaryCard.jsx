@@ -17,7 +17,7 @@ const PaymentSummaryCard = ({ shiftData }) => {
               <div className="flex-1">
                 <div className="flex justify-between">
                   <span className="font-medium">{(payment.type)}</span>
-                  <span className="font-bold">₹{payment.totalAmount?.toFixed(2)}</span>
+                  <span className="font-bold">${payment.totalAmount?.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-muted-foreground">
                   <span>{payment.transactionCount} transactions</span>

@@ -170,7 +170,7 @@ const EditPlanDialog = ({ open, onOpenChange, plan, onSuccess }) => {
         </div>
         <div className="flex gap-4">
           <div className="flex-1">
-            <label className="block font-medium" htmlFor="plan-price">Price (₹)</label>
+            <label className="block font-medium" htmlFor="plan-price">Price ($)</label>
             <Field as={Input} id="plan-price" name="price" type="number" min="0" placeholder="Price" />
             <ErrorMessage name="price" component="div" className="text-red-500 text-xs" />
           </div>

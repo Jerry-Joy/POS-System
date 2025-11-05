@@ -62,7 +62,7 @@ const ReturnItemsSection = ({ selectedOrder, setShowReceiptDialog }) => {
       await dispatch(createRefund(refundDTO)).unwrap();
       toast({
         title: "Refund Processed",
-        description: `Refund of ₹${selectedOrder.totalAmount} processed via ${refundDTO.refundMethod}`,
+        description: `Refund of $${selectedOrder.totalAmount} processed via ${refundDTO.refundMethod}`,
       });
     } catch (error) {
       toast({
@@ -133,7 +133,7 @@ const ReturnItemsSection = ({ selectedOrder, setShowReceiptDialog }) => {
             <div className="pt-4 border-t">
               <div className="flex justify-between text-lg font-semibold">
                 <span>Total Refund Amount:</span>
-                <span>₹{selectedOrder.totalAmount}</span>
+                <span>${selectedOrder.totalAmount}</span>
               </div>
             </div>
             <Button className="w-full" onClick={processRefund}>

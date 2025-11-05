@@ -143,9 +143,9 @@ const PricingCalculator = () => {
           <div className="flex justify-between items-center mb-4">
             <span className="text-gray-700 dark:text-white">Estimated Monthly Price:</span>
             <div className="text-right">
-              <div className="text-3xl font-bold text-primary">₹{totalPrice.toLocaleString()}</div>
+              <div className="text-3xl font-bold text-primary">${totalPrice.toLocaleString()}</div>
               {savings > 0 && (
-                <div className="text-sm text-green-600">You save ₹{savings.toLocaleString()}</div>
+                <div className="text-sm text-green-600">You save ${savings.toLocaleString()}</div>
               )}
             </div>
           </div>

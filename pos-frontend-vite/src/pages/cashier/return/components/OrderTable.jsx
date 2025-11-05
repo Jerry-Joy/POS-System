@@ -48,7 +48,7 @@ const OrderTable = ({ handleSelectOrder }) => {
                   <TableCell className="font-medium">{order.id}</TableCell>
                   <TableCell>{formatDate(order.createdAt)}</TableCell>
                   <TableCell>{order.customer?.fullName}</TableCell>
-                  <TableCell>₹{order.totalAmount?.toFixed(2)}</TableCell>
+                  <TableCell>${order.totalAmount?.toFixed(2)}</TableCell>
                   <TableCell>{order.paymentType}</TableCell>
                   <TableCell className="text-right">
                     <Button onClick={() => handleSelectOrder(order)}>

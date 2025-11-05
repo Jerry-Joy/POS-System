@@ -99,7 +99,7 @@ const TrustedLogos = () => {
           <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             {[
               { number: '5,000+', label: 'Active Users' },
-              { number: '₹100M+', label: 'Monthly Sales' },
+              { number: '$100M+', label: 'Monthly Sales' },
               { number: '25+', label: 'States Covered' },
               { number: '99.9%', label: 'Uptime' }
             ].map((stat, index) => (

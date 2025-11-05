@@ -66,7 +66,7 @@ const PaymentSection = ({ setShowPaymentDialog }) => {
       <div className="space-y-4">
         <div className="text-center">
           <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-1">
-            ₹{total.toFixed(2)}
+            ${total.toFixed(2)}
           </div>
           <p className="text-sm text-muted-foreground">Total Amount</p>
         </div>

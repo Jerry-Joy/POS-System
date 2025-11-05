@@ -53,7 +53,7 @@ const PurchaseHistory = ({ orders, loading = false }) => {
                   <div className="text-right">
                     <div className="flex items-center gap-2 mb-1">
                       <DollarSignIcon className="h-4 w-4" />
-                      <span className="font-bold">₹{order.totalAmount?.toFixed(2) || '0.00'}</span>
+                      <span className="font-bold">${order.totalAmount?.toFixed(2) || '0.00'}</span>
                     </div>
                     {order.status && (
                       <Badge className={getStatusColor(order.status)}>
@@ -77,7 +77,7 @@ const PurchaseHistory = ({ orders, loading = false }) => {
                         <div key={index} className="flex justify-between text-sm">
                           <span>{item.product.name || item.productName || 'Unknown Product'}</span>
                           <span className="text-muted-foreground">
-                            {item.quantity || 1} × ₹{(item.price || 0).toFixed(2)}
+                            {item.quantity || 1} × ${(item.price || 0).toFixed(2)}
                           </span>
                         </div>
                       ))}

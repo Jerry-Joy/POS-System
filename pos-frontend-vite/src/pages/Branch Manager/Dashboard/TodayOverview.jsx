@@ -10,7 +10,7 @@ const TodayOverview = () => {
       const kpis = todayOverview ? [
         {
           title: "Today's Sales",
-          value: `₹${todayOverview.totalSales?.toLocaleString() ?? "-"}`,
+          value: `$${todayOverview.totalSales?.toLocaleString() ?? "-"}`,
           icon: <DollarSign className="w-8 h-8 text-primary" />,
           change: todayOverview.salesGrowth !== undefined ? `${todayOverview.salesGrowth > 0 ? "+" : ""}${todayOverview.salesGrowth.toFixed(2)}%` : "-",
           changeType: getChangeType(todayOverview.salesGrowth)

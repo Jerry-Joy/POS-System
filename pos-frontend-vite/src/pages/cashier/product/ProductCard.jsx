@@ -33,7 +33,7 @@ const ProductCard = ({ product }) => {
         <p className="text-xs text-muted-foreground m">{product.sku}</p>
         <div className="flex items-center justify-between">
           <span className="font-bold text-green-600">
-            ₹{product.sellingPrice || product.price}
+            ${product.sellingPrice || product.price}
           </span>
           <Badge variant="secondary" className="text-xs">
             {product.category}

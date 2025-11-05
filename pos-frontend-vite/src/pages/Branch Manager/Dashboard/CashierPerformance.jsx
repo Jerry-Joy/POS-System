@@ -52,14 +52,14 @@ const CashierPerformance = () => {
                 bottom: 5,
               }}
             >
-              <XAxis type="number" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `₹${value}`} />
+              <XAxis type="number" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
               <YAxis dataKey="name" type="category" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
               <ChartTooltip
                 content={({ active, payload }) => (
                   <ChartTooltipContent
                     active={active}
                     payload={payload}
-                    formatter={(value) => [`₹${value}`, "Revenue"]}
+                    formatter={(value) => [`$${value}`, "Revenue"]}
                   />
                 )}
               />

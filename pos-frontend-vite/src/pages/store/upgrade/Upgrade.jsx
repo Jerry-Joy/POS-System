@@ -91,7 +91,7 @@ const Upgrade = () => {
                   <h3 className="text-2xl font-bold text-foreground mb-2">{plan.name}</h3>
                   <div className="flex items-baseline justify-center">
                     <span className="text-4xl font-bold text-foreground">
-                      ₹{plan.price}
+                      ${plan.price}
                     </span>
                     <span className="text-muted-foreground ml-1">
                       /{plan.billingCycle?.toLowerCase()}

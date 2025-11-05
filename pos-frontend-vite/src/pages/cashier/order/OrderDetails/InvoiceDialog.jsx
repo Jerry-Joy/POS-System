@@ -44,13 +44,20 @@ const InvoiceDialog = ({ showInvoiceDialog, setShowInvoiceDialog }) => {
   return (
     <Dialog open={showInvoiceDialog} onOpenChange={setShowInvoiceDialog}>
       {selectedOrder && (
-        <DialogContent className="w-5xl">
-          <DialogHeader>
-            <DialogTitle>Order Details - Invoice</DialogTitle>
+        <DialogContent
+          className="max-w-4xl w-[min(92vw,64rem)] p-0 overflow-hidden print:max-w-full print:w-full"
+        >
+          <DialogHeader className="px-6 pt-6 pb-4 border-b bg-background print:border-0">
+            <DialogTitle className="text-lg sm:text-xl">
+              Order Details - Invoice
+            </DialogTitle>
           </DialogHeader>
-          <OrderDetails selectedOrder={selectedOrder} />
 
-          <DialogFooter className="gap-2 sm:gap-0 space-x-3">
+          <div className="px-6 py-4 max-h-[65vh] overflow-y-auto print:max-h-none print:overflow-visible">
+            <OrderDetails selectedOrder={selectedOrder} />
+          </div>
+
+          <DialogFooter className="px-6 py-4 border-t bg-background flex flex-wrap gap-2 sm:gap-2 print:hidden">
             <Button variant="outline" onClick={handleDownloadPDF}>
               <Download className="h-4 w-4 mr-2" />
               Download PDF

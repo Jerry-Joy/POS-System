@@ -84,7 +84,7 @@
   <!-- Monthly Sales -->
   <g transform="translate(260, 380)">
     <rect width="140" height="100" rx="10" fill="white" fill-opacity="0.8" />
-    <text x="70" y="50" font-family="Arial" font-size="24" font-weight="bold" text-anchor="middle" fill="#15803d">₹100M+</text>
+    <text x="70" y="50" font-family="Arial" font-size="24" font-weight="bold" text-anchor="middle" fill="#15803d">$100M+</text>
     <text x="70" y="75" font-family="Arial" font-size="14" text-anchor="middle" fill="#4b5563">Monthly Sales</text>
   </g>
   

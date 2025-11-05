@@ -55,11 +55,11 @@ const FeatureComparisonTable = () => {
             <th className="py-4 px-6 text-left text-gray-600 font-medium">Features</th>
             <th className="py-4 px-6 text-center text-gray-600 font-medium w-1/5">
               <div className="text-lg font-bold text-gray-900">Basic</div>
-              <div className="text-sm font-normal">₹999/month</div>
+              <div className="text-sm font-normal">$999/month</div>
             </th>
             <th className="py-4 px-6 text-center text-gray-600 font-medium w-1/5 bg-primary/5">
               <div className="text-lg font-bold text-primary">Pro</div>
-              <div className="text-sm font-normal">₹1,999/month</div>
+              <div className="text-sm font-normal">$1,999/month</div>
             </th>
             <th className="py-4 px-6 text-center text-gray-600 font-medium w-1/5">
               <div className="text-lg font-bold text-gray-900">Enterprise</div>

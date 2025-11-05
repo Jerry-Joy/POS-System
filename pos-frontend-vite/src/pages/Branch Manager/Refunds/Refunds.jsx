@@ -48,7 +48,7 @@ const Refunds = () => {
               <TableCell className="font-medium">#{refund.id}</TableCell>
               <TableCell className="font-medium">#ORD-{refund.orderId}</TableCell>
             
-              <TableCell>₹{refund.amount || 499}</TableCell>
+              <TableCell>${refund.amount || 499}</TableCell>
               <TableCell className="text-right">{refund.reason}</TableCell>
             </TableRow>
           ))

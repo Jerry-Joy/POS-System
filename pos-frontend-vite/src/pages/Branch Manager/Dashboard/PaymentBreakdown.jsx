@@ -29,7 +29,7 @@ const PaymentBreakdown = () => {
                       style={{ width: `${payment.percentage ?? 0}%` }}
                     ></div>
                   </div>
-                  <span className="text-sm font-medium">₹{payment.totalAmount?.toLocaleString() ?? "-"}</span>
+                  <span className="text-sm font-medium">${payment.totalAmount?.toLocaleString() ?? "-"}</span>
                   <span className="text-xs text-gray-500">{payment.percentage ? `${payment.percentage}%` : ""}</span>
                   <span className="text-xs text-gray-500">{payment.transactionCount ? `(${payment.transactionCount} txns)` : ""}</span>
                 </div>

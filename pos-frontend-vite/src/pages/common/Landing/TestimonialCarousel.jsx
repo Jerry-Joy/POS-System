@@ -212,7 +212,7 @@ const TestimonialCarousel = () => {
             <p className="text-gray-600">Customer Satisfaction</p>
           </div>
           <div className="text-center">
-            <p className="text-4xl font-bold text-primary mb-2">₹2.5M+</p>
+            <p className="text-4xl font-bold text-primary mb-2">$2.5M+</p>
             <p className="text-gray-600">Revenue Processed</p>
           </div>
           <div className="text-center">

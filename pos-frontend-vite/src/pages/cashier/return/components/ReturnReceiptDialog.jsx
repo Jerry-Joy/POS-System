@@ -70,9 +70,9 @@ const ReturnReceiptDialog = ({
                 <TableRow key={item.id}>
                   <TableCell className="py-2">{item.product?.name.slice(0, 20)+"..."}</TableCell>
                   <TableCell className="text-center py-2">{item.returnQuantity}</TableCell>
-                  <TableCell className="text-right py-2">₹{item.product?.sellingPrice?.toFixed(2)}</TableCell>
+                  <TableCell className="text-right py-2">${item.product?.sellingPrice?.toFixed(2)}</TableCell>
                   <TableCell className="text-right py-2">
-                    ₹{(item.product.sellingPrice * item.returnQuantity)?.toFixed(2)}
+                    ${(item.product.sellingPrice * item.returnQuantity)?.toFixed(2)}
                   </TableCell>
                 </TableRow>
               ))}
@@ -81,7 +81,7 @@ const ReturnReceiptDialog = ({
         <div className="space-y-1 text-sm mb-4">
           <div className="flex justify-between font-bold border-t pt-1">
             <span>Total Refund</span>
-            <span>₹{selectedOrder.totalAmount}</span>
+            <span>${selectedOrder.totalAmount}</span>
           </div>
           <div className="flex justify-between pt-1">
             <span>Refund Method</span>

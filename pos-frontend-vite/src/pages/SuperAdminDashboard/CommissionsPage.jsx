@@ -125,7 +125,7 @@ export default function CommissionsPage() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₹37,000</div>
+            <div className="text-2xl font-bold">$37,000</div>
             <p className="text-xs text-muted-foreground">
               +12% from last month
             </p>
@@ -192,7 +192,7 @@ export default function CommissionsPage() {
                           <span className="text-sm">{rateChange.value}</span>
                         </div>
                       </TableCell>
-                      <TableCell>₹{commission.totalEarnings.toLocaleString()}</TableCell>
+                      <TableCell>${commission.totalEarnings.toLocaleString()}</TableCell>
                       <TableCell>{commission.lastUpdated}</TableCell>
                       <TableCell className="text-right">
                         <Button

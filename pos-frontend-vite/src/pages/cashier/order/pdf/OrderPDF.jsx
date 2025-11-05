@@ -27,7 +27,7 @@ export const OrderPDF = ({ order }) => (
           <View style={styles.infoItem}>
             <Text style={styles.infoLabel}>Total Amount:</Text>
             <Text style={styles.totalAmount}>
-              ₹{order.totalAmount?.toFixed(2) || "0.00"}
+              ${order.totalAmount?.toFixed(2) || "0.00"}
             </Text>
           </View>
         </View>
@@ -90,10 +90,10 @@ export const OrderPDF = ({ order }) => (
               </View>
               <Text style={styles.tableCellCenter}>{item.quantity}</Text>
               <Text style={styles.tableCellRight}>
-                ₹{item.product?.sellingPrice?.toFixed(2) || "0.00"}
+                ${item.product?.sellingPrice?.toFixed(2) || "0.00"}
               </Text>
               <Text style={styles.tableCellRight}>
-                ₹{(item.product?.sellingPrice * item.quantity)?.toFixed(2) || "0.00"}
+                ${(item.product?.sellingPrice * item.quantity)?.toFixed(2) || "0.00"}
               </Text>
             </View>
           ))}

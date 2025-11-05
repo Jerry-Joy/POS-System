@@ -59,10 +59,10 @@ const OrderItemTable = ({ selectedOrder }) => {
             </TableCell>
             <TableCell className="text-center">{item.quantity}</TableCell>
             <TableCell className="text-right">
-              ₹{item.product?.sellingPrice?.toFixed(2) || "0.00"}
+              ${item.product?.sellingPrice?.toFixed(2) || "0.00"}
             </TableCell>
             <TableCell className="text-right">
-              ₹
+              $
               {(item.product?.sellingPrice * item.quantity)?.toFixed(2) ||
                 "0.00"}
             </TableCell>

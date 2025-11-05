@@ -191,7 +191,7 @@ const SubscriptionPlansPage = () => {
                 <TableCell className="px-4 py-2 font-medium">
                   {plan.name}
                 </TableCell>
-                <TableCell className="px-4 py-2">₹{plan.price}</TableCell>
+                <TableCell className="px-4 py-2">${plan.price}</TableCell>
                 <TableCell className="px-4 py-2">{plan.billingCycle}</TableCell>
                 <TableCell className="px-4 py-2">
                   {plan.maxBranches ?? "-"}

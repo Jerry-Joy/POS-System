@@ -41,7 +41,7 @@ const RecentOrders = () => {
               <TableRow key={order.id}>
                 <TableCell className="font-medium">{order.id}</TableCell>
                 <TableCell>{order.customer?.fullName || order.customerName || "-"}</TableCell>
-                <TableCell>{order.amount ? `₹${order.amount}` : order.totalAmount ? `₹${order.totalAmount}` : "-"}</TableCell>
+                <TableCell>{order.amount ? `$${order.amount}` : order.totalAmount ? `$${order.totalAmount}` : "-"}</TableCell>
                 <TableCell>
                   <Badge className={getStatusColor(order.status)} variant="secondary">
                     {order.status}

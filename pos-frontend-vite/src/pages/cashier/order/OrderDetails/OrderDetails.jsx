@@ -6,20 +6,18 @@ import { Card, CardContent } from "../../../../components/ui/card";
 
 const OrderDetails = ({ selectedOrder }) => {
   return (
-    <div>
-      <div className="grid grid-cols-2 gap-4 mb-4">
+    <div className="print:bg-white">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <OrderInformation selectedOrder={selectedOrder} />
         <CustomerInformation selectedOrder={selectedOrder} />
       </div>
 
-       <Card>
+      <Card>
         <CardContent className="p-4">
-          <h3 className="font-semibold mb-2">Order Items</h3>
+          <h3 className="font-semibold mb-3">Order Items</h3>
           <OrderItemTable selectedOrder={selectedOrder} />
         </CardContent>
       </Card>
-
-     
     </div>
   );
 };

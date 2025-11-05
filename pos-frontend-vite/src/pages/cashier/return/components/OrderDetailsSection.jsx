@@ -37,7 +37,7 @@ const OrderDetailsSection = ({ selectedOrder, setSelectedOrder }) => (
             </div>
             <div className="flex justify-between font-medium">
               <span>Order Total:</span>
-              <span>₹{selectedOrder.totalAmount?.toFixed(2)}</span>
+              <span>${selectedOrder.totalAmount?.toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -59,8 +59,8 @@ const OrderDetailsSection = ({ selectedOrder, setSelectedOrder }) => (
             <TableRow key={item.id}>
               <TableCell>{item.product?.name}</TableCell>
               <TableCell className="text-center">{item.quantity}</TableCell>
-              <TableCell className="text-right">₹{(item.product?.sellingPrice)?.toFixed(2)}</TableCell>
-              <TableCell className="text-right">₹{(item.product?.sellingPrice * item.quantity).toFixed(2)}</TableCell>
+              <TableCell className="text-right">${(item.product?.sellingPrice)?.toFixed(2)}</TableCell>
+              <TableCell className="text-right">${(item.product?.sellingPrice * item.quantity).toFixed(2)}</TableCell>
             </TableRow>
           ))}
         </TableBody>

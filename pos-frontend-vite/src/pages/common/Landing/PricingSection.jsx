@@ -6,7 +6,7 @@ import { Button } from "../../../components/ui/button";
 const pricingPlans = [
   {
     name: "Basic",
-    price: "₹999",
+    price: "$999",
     period: "/month",
     features: [
       "Single store",
@@ -20,7 +20,7 @@ const pricingPlans = [
   },
   {
     name: "Pro",
-    price: "₹1,999",
+    price: "$1,999",
     period: "/month",
     features: [
       "Multi-store",

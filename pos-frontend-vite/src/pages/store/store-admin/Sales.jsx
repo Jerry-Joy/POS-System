@@ -245,7 +245,7 @@ export default function Sales() {
                       fontSize={12}
                       tickLine={false}
                       axisLine={false}
-                      tickFormatter={(value) => `₹${value}`}
+                      tickFormatter={(value) => `$${value}`}
                     />
                     <ChartTooltip
                       content={({ active, payload }) => (
@@ -303,7 +303,7 @@ export default function Sales() {
                       fontSize={12}
                       tickLine={false}
                       axisLine={false}
-                      tickFormatter={(value) => `₹${value}`}
+                      tickFormatter={(value) => `$${value}`}
                     />
                     <ChartTooltip
                       content={({ active, payload }) => (

@@ -92,7 +92,7 @@ const MobileAppShowcase = () => {
                     <div className="grid grid-cols-2 gap-3 mb-4">
                       <div className="bg-gray-50 p-3 rounded-lg">
                         <p className="text-xs text-gray-500">Today's Sales</p>
-                        <p className="text-lg font-bold text-gray-900">₹12,450</p>
+                        <p className="text-lg font-bold text-gray-900">$12,450</p>
                         <p className="text-xs text-green-500">+8% from yesterday</p>
                       </div>
                       <div className="bg-gray-50 p-3 rounded-lg">
@@ -117,7 +117,7 @@ const MobileAppShowcase = () => {
                               <p className="text-xs font-medium">Order #{1000 + item}</p>
                               <p className="text-xs text-gray-500">2 mins ago</p>
                             </div>
-                            <p className="text-sm font-bold">₹{(item * 450).toLocaleString()}</p>
+                            <p className="text-sm font-bold">${(item * 450).toLocaleString()}</p>
                           </div>
                         </div>
                       ))}

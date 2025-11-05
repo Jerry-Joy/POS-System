@@ -15,7 +15,7 @@ const TopSellingItemsCard = ({ shiftData }) => {
               <div className="flex-1">
                 <div className="flex justify-between">
                   <span className="font-medium">{item.name}</span>
-                  <span className="font-bold">₹{item.sellingPrice?.toFixed(2)}</span>
+                  <span className="font-bold">${item.sellingPrice?.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-muted-foreground">
                   <span>{item.quantity} units sold</span>

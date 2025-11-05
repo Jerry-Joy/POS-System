@@ -55,7 +55,7 @@ const OrdersTable = ({ orders, loading, onViewDetails, onPrintInvoice, getStatus
               <TableCell>{order.customer?.fullName || "-"}</TableCell>
               <TableCell>{order.cashierId || "-"}</TableCell>
               <TableCell>{order.createdAt ? order.createdAt.slice(0, 10) : "-"}</TableCell>
-              <TableCell>{order.totalAmount ? `₹${order.totalAmount}` : "-"}</TableCell>
+              <TableCell>{order.totalAmount ? `$${order.totalAmount}` : "-"}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
                   {getPaymentIcon(order.paymentType)} {order.paymentType || "-"}

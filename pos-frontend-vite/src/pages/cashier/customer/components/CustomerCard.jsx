@@ -24,7 +24,7 @@ const CustomerCard = ({customer, onSelectCustomer, selectedCustomer}) => {
                 <span className="font-medium">{customer.totalOrders || 0}</span> orders
               </div>
               <div>
-                <span className="font-medium">₹{(customer.totalSpent || 0).toFixed(2)}</span> spent
+                <span className="font-medium">${(customer.totalSpent || 0).toFixed(2)}</span> spent
               </div>
             </div> */}
           </div>

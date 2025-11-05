@@ -70,7 +70,7 @@ const CustomerDetails = ({ customer, onAddPoints, loading = false }) => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <span className="text-2xl font-bold">₹{(customer.totalSpent || 0).toFixed(2)}</span>
+            <span className="text-2xl font-bold">${(customer.totalSpent || 0).toFixed(2)}</span>
           </CardContent>
         </Card>
       </div>
@@ -81,7 +81,7 @@ const CustomerDetails = ({ customer, onAddPoints, loading = false }) => {
             <CardTitle>Average Order Value</CardTitle>
           </CardHeader>
           <CardContent>
-            <span className="text-2xl font-bold">₹{customer.averageOrderValue.toFixed(2)}</span>
+            <span className="text-2xl font-bold">${customer.averageOrderValue.toFixed(2)}</span>
           </CardContent>
         </Card>
       )}

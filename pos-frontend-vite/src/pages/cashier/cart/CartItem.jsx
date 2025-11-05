@@ -37,9 +37,9 @@ const CartItem = ({item,updateCartItemQuantity,removeFromCart}) => {
                         </Button>
                       </div>
                       <div className="text-right">
-                        <p className="font-medium">₹{item.sellingPrice}</p>
+                        <p className="font-medium">${item.sellingPrice}</p>
                         <p className="text-sm font-bold text-green-600">
-                          ₹{(item.sellingPrice * item.quantity).toFixed(2)}
+                          ${(item.sellingPrice * item.quantity).toFixed(2)}
                         </p>
                       </div>
                       <Button

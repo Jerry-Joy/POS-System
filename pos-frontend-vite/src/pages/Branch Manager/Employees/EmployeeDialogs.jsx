@@ -143,7 +143,7 @@ export const PerformanceDialog = ({
                       <h3 className="text-lg font-medium text-gray-500">
                         Total Sales
                       </h3>
-                      <p className="text-3xl font-bold mt-2">₹78,450</p>
+                      <p className="text-3xl font-bold mt-2">$78,450</p>
                       <p className="text-sm text-gray-500 mt-1">Last 30 days</p>
                     </div>
                   </CardContent>
@@ -155,7 +155,7 @@ export const PerformanceDialog = ({
                       <h3 className="text-lg font-medium text-gray-500">
                         Avg. Order Value
                       </h3>
-                      <p className="text-3xl font-bold mt-2">₹617</p>
+                      <p className="text-3xl font-bold mt-2">$617</p>
                       <p className="text-sm text-gray-500 mt-1">Last 30 days</p>
                     </div>
                   </CardContent>
