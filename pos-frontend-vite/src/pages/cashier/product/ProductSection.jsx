@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,7 @@ const ProductSection = ({searchInputRef}) => {
   const { branch } = useSelector((state) => state.branch);
   const { userProfile } = useSelector((state) => state.user);
   const [searchTerm, setSearchTerm] = useState("");
+  const debounceTimerRef = useRef(null);
   const {
     products,
     searchResults,
@@ -87,40 +88,44 @@ const ProductSection = ({searchInputRef}) => {
   }, [dispatch, branch, userProfile, toast]);
 
   // Debounced search function
-  const debouncedSearch = useCallback(
-    (() => {
-      let timeoutId;
-      return (query) => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-          if (query.trim() && branch?.storeId && localStorage.getItem("jwt")) {
-            dispatch(
-              searchProducts({
-                query: query.trim(),
-                storeId: branch.storeId,
-              })
-            )
-              .unwrap()
-              .catch((error) => {
-                console.error("Search failed:", error);
-                toast({
-                  title: "Search Error",
-                  description: error || "Failed to search products",
-                  variant: "destructive",
-                });
-              });
-          }
-        }, 500); // 300ms debounce
-      };
-    })(),
+  const performSearch = useCallback(
+    (query) => {
+      if (query.trim() && branch?.storeId && localStorage.getItem("jwt")) {
+        dispatch(
+          searchProducts({
+            query: query.trim(),
+            storeId: branch.storeId,
+          })
+        )
+          .unwrap()
+          .catch((error) => {
+            console.error("Search failed:", error);
+            toast({
+              title: "Search Error",
+              description: error || "Failed to search products",
+              variant: "destructive",
+            });
+          });
+      }
+    },
     [dispatch, branch, toast]
   );
 
-  // Handle search term changes
+  // Handle search term changes with debounce
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-    if (e.target.value.trim()) {
-      debouncedSearch(e.target.value);
+    const value = e.target.value;
+    setSearchTerm(value);
+    
+    // Clear previous timeout
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    
+    if (value.trim()) {
+      // Set new timeout for search
+      debounceTimerRef.current = setTimeout(() => {
+        performSearch(value);
+      }, 500);
     } else {
       // Clear search results when search term is empty
       dispatch(clearSearchResults());
@@ -137,6 +142,13 @@ const ProductSection = ({searchInputRef}) => {
         });
       }
     }, [productsError, toast]);
+
+    // Maintain focus on search input after search results update
+    useEffect(() => {
+      if (searchInputRef.current && document.activeElement !== searchInputRef.current && searchTerm) {
+        searchInputRef.current.focus();
+      }
+    }, [searchResults, searchInputRef, searchTerm]);
 
   return (
     <div className="w-2/5 flex flex-col bg-card border-r">

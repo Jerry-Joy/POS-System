@@ -7,7 +7,7 @@ import { addToCart } from "../../../Redux Toolkit/features/cart/cartSlice";
 
 const ProductCard = ({ product }) => {
     const dispatch=useDispatch();
-    const toast = useToast();
+    const { toast } = useToast();
 
      const handleAddToCart = (product) => {
       dispatch(addToCart(product));
@@ -31,11 +31,15 @@ const ProductCard = ({ product }) => {
         </div>
         <h3 className="font-medium text-sm truncate">{product.name}</h3>
         <p className="text-xs text-muted-foreground m">{product.sku}</p>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col items-center justify-between">
           <span className="font-bold text-green-600">
             ${product.sellingPrice || product.price}
           </span>
-          <Badge variant="secondary" className="text-xs">
+          <Badge 
+            variant="secondary" 
+            title={product.category}
+            className="text-xs max-w-full truncate block"
+          >
             {product.category}
           </Badge>
         </div>

@@ -52,15 +52,6 @@ const PaymentDialog = ({
       return;
     }
 
-    if (!selectedCustomer) {
-      toast({
-        title: "Customer Required",
-        description: "Please select a customer before processing payment",
-        variant: "destructive",
-      });
-      return;
-    }
-
     try {
       // Prepare order data according to OrderDTO structure
       const orderData = {
