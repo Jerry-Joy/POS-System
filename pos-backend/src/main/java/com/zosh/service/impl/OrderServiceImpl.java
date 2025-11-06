@@ -28,6 +28,7 @@ public class OrderServiceImpl implements OrderService {
     private final ProductRepository productRepository;
     private final BranchRepository branchRepository;
     private final UserService userService;
+    private final InventoryRepository inventoryRepository;
 
     @Override
     public OrderDTO createOrder(OrderDTO dto) throws UserException {
@@ -49,6 +50,21 @@ public class OrderServiceImpl implements OrderService {
         List<OrderItem> orderItems = dto.getItems().stream().map(itemDto -> {
             Product product = productRepository.findById(itemDto.getProductId())
                     .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+
+            // ✅ Check and update inventory
+            Inventory inventory = inventoryRepository.findByBranchIdAndProductId(branch.getId(), product.getId());
+            if (inventory == null) {
+                throw new EntityNotFoundException("Inventory not found for product: " + product.getName() + " in branch: " + branch.getName());
+            }
+
+            if (inventory.getQuantity() < itemDto.getQuantity()) {
+                throw new IllegalStateException("Insufficient stock for product: " + product.getName() + 
+                    ". Available: " + inventory.getQuantity() + ", Requested: " + itemDto.getQuantity());
+            }
+
+            // ✅ Deduct quantity from inventory
+            inventory.setQuantity(inventory.getQuantity() - itemDto.getQuantity());
+            inventoryRepository.save(inventory);
 
             return OrderItem.builder()
                     .product(product)

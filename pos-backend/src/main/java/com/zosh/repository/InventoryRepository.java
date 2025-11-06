@@ -10,6 +10,7 @@ import java.util.List;
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     Inventory findByProductId(Long productId);
     List<Inventory> findByBranchId(Long branchId);
+    Inventory findByBranchIdAndProductId(Long branchId, Long productId);
 
     @Query("""
         SELECT COUNT(i)
