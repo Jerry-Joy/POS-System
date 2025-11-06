@@ -54,6 +54,7 @@ public class SecurityConfig {
 				cfg.setAllowedOrigins(Arrays.asList(
 						"http://localhost:3000",
 						"http://localhost:5173",
+						"http://localhost:5174",
 						"https://zosh-pos.vercel.app",
 						"https://pos-sytem-bcs6.vercel.app"
 				));

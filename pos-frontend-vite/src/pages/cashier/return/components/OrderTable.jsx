@@ -52,7 +52,7 @@ const OrderTable = ({ handleSelectOrder }) => {
                   <TableCell>{order.paymentType}</TableCell>
                   <TableCell className="text-right">
                     <Button onClick={() => handleSelectOrder(order)}>
-                      Select for Return
+                      Select to Refund
                     </Button>
                   </TableCell>
                 </TableRow>
