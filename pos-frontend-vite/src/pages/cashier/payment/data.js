@@ -2,5 +2,5 @@
   export const paymentMethods = [
     { key: 'CASH', label: '💵 Cash', display: 'cash' },
     { key: 'CARD', label: '💳 Card', display: 'card' },
-    { key: 'UPI', label: '📱 UPI', display: 'upi' },
+    { key: 'MOBILE_MONEY', label: '📱 Mobile Money', display: 'mobile money' },
   ];

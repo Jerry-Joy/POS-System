@@ -4,8 +4,9 @@
         return 'Cash';
       case 'card':
         return 'Card';
-      case 'upi':
-        return 'UPI';
+      case 'mobile_money':
+      case 'mobile money':
+        return 'Mobile Money';
       default:
         return method;
     }

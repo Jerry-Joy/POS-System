@@ -57,7 +57,7 @@ public class StoreAnalyticsController {
         return storeAnalyticsService.getSalesByBranch(storeAdminId);
     }
 
-    // 💵 Payment Breakdown (Cash, UPI, Card)
+    // 💵 Payment Breakdown (Cash, Mobile Money, Card)
     @GetMapping("/{storeAdminId}/payments")
     public List<PaymentInsightDTO> getPaymentBreakdown(@PathVariable Long storeAdminId) {
         return storeAnalyticsService.getPaymentBreakdown(storeAdminId);

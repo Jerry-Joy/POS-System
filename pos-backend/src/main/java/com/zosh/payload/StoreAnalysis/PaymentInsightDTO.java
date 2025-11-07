@@ -9,6 +9,6 @@ import java.math.BigDecimal;
 @Data
 @Builder
 public class PaymentInsightDTO {
-    private PaymentType paymentMethod; // Cash, UPI, Card, Wallet
+    private PaymentType paymentMethod; // Cash, Mobile Money, Card
     private Double totalAmount;
 }

@@ -31,7 +31,7 @@ import java.util.List;
         List<BranchSalesDTO> getSalesByBranch(Long storeAdminId);
 
         // 💵 3. Payment Insights: Breakdown of transactions
-        // 💵 Total amounts grouped by payment methods (Cash, UPI, Card)
+        // 💵 Total amounts grouped by payment methods (Cash, Mobile Money, Card)
         List<PaymentInsightDTO> getPaymentBreakdown(Long storeAdminId);
 
 

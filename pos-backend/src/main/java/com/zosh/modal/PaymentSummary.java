@@ -15,7 +15,7 @@ import lombok.Setter;
 public class PaymentSummary {
 
 
-    private PaymentType type; // CASH, CARD, UPI
+    private PaymentType type; // CASH, CARD, MOBILE_MONEY
 
     private Double totalAmount;
     private int transactionCount;
