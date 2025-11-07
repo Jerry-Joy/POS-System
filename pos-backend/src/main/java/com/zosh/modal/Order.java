@@ -23,6 +23,12 @@ public class Order {
     private Long id;
 
     private Double totalAmount;
+    
+    private Double subtotal; // Total before discount
+    
+    private Double discount; // Discount amount from loyalty points
+    
+    private Integer loyaltyPointsUsed; // Number of points redeemed
 
     private LocalDateTime createdAt;
 
@@ -42,7 +48,8 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> items;
 
-    private OrderStatus status=OrderStatus.COMPLETED;
+    @Builder.Default
+    private OrderStatus status = OrderStatus.COMPLETED;
 
     @PrePersist
     public void onCreate() {

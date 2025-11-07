@@ -4,7 +4,9 @@ import {
   updateCustomer,
   deleteCustomer,
   getCustomerById,
-  getAllCustomers
+  getAllCustomers,
+  addLoyaltyPoints,
+  redeemLoyaltyPoints
 } from './customerThunks';
 
 const initialState = {
@@ -99,6 +101,48 @@ const customerSlice = createSlice({
         state.customers = action.payload;
       })
       .addCase(getAllCustomers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Add Loyalty Points
+      .addCase(addLoyaltyPoints.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(addLoyaltyPoints.fulfilled, (state, action) => {
+        state.loading = false;
+        // Update customer in list
+        const index = state.customers.findIndex(customer => customer.id === action.payload.id);
+        if (index !== -1) {
+          state.customers[index] = action.payload;
+        }
+        // Update selected customer
+        if (state.selectedCustomer && state.selectedCustomer.id === action.payload.id) {
+          state.selectedCustomer = action.payload;
+        }
+      })
+      .addCase(addLoyaltyPoints.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Redeem Loyalty Points
+      .addCase(redeemLoyaltyPoints.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(redeemLoyaltyPoints.fulfilled, (state, action) => {
+        state.loading = false;
+        // Update customer in list
+        const index = state.customers.findIndex(customer => customer.id === action.payload.id);
+        if (index !== -1) {
+          state.customers[index] = action.payload;
+        }
+        // Update selected customer
+        if (state.selectedCustomer && state.selectedCustomer.id === action.payload.id) {
+          state.selectedCustomer = action.payload;
+        }
+      })
+      .addCase(redeemLoyaltyPoints.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

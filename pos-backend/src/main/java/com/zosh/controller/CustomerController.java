@@ -50,5 +50,21 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.getAllCustomers());
     }
 
+    @PostMapping("/{id}/loyalty-points/add")
+    public ResponseEntity<Customer> addLoyaltyPoints(
+            @PathVariable Long id,
+            @RequestParam Integer points
+    ) throws ResourceNotFoundException {
+        return ResponseEntity.ok(customerService.addLoyaltyPoints(id, points));
+    }
+
+    @PostMapping("/{id}/loyalty-points/redeem")
+    public ResponseEntity<Customer> redeemLoyaltyPoints(
+            @PathVariable Long id,
+            @RequestParam Integer points
+    ) throws ResourceNotFoundException {
+        return ResponseEntity.ok(customerService.redeemLoyaltyPoints(id, points));
+    }
+
 
 }

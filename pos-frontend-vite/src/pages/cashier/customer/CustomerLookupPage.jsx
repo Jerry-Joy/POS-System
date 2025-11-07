@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/components/ui/use-toast";
 import {
   getAllCustomers,
-  
+  addLoyaltyPoints as addLoyaltyPointsThunk,
+  getCustomerById,
 } from "@/Redux Toolkit/features/customer/customerThunks";
 import {
   getOrdersByCustomer,
@@ -89,7 +90,7 @@ const CustomerLookupPage = () => {
     }
   };
 
-  const handleAddPoints = () => {
+  const handleAddPoints = async () => {
     const error = validatePoints(pointsToAdd);
     if (error) {
       toast({
@@ -100,16 +101,41 @@ const CustomerLookupPage = () => {
       return;
     }
 
-    // In a real app, this would update the customer's loyalty points in the database
-    toast({
-      title: "Points Added",
-      description: `${pointsToAdd} points added to ${
-        selectedCustomer.fullName || selectedCustomer.name
-      }'s account`,
-    });
+    if (!selectedCustomer?.id) {
+      toast({
+        title: "Error",
+        description: "No customer selected",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    setShowAddPointsDialog(false);
-    setPointsToAdd(0);
+    try {
+      // Call the actual API to add points
+      await dispatch(addLoyaltyPointsThunk({ 
+        customerId: selectedCustomer.id, 
+        points: pointsToAdd 
+      })).unwrap();
+
+      toast({
+        title: "Points Added",
+        description: `${pointsToAdd} points added to ${
+          selectedCustomer.fullName || selectedCustomer.name
+        }'s account`,
+      });
+
+      // Refresh customer data
+      dispatch(getCustomerById(selectedCustomer.id));
+      
+      setShowAddPointsDialog(false);
+      setPointsToAdd(0);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error || "Failed to add points",
+        variant: "destructive",
+      });
+    }
   };
 
 
@@ -117,7 +143,7 @@ const CustomerLookupPage = () => {
     if (selectedCustomer) {
       dispatch(getOrdersByCustomer(selectedCustomer.id));
     }
-  }, [selectedCustomer]);
+  }, [selectedCustomer, dispatch]);
 
   // Calculate customer stats from orders
   const customerStats = selectedCustomer

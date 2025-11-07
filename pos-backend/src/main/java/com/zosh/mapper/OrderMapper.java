@@ -2,9 +2,7 @@ package com.zosh.mapper;
 
 
 import com.zosh.modal.Order;
-import com.zosh.modal.OrderItem;
 import com.zosh.payload.dto.OrderDTO;
-import com.zosh.payload.dto.OrderItemDTO;
 
 import java.util.stream.Collectors;
 
@@ -14,6 +12,9 @@ public class OrderMapper {
         return OrderDTO.builder()
                 .id(order.getId())
                 .totalAmount(order.getTotalAmount())
+                .subtotal(order.getSubtotal())
+                .discount(order.getDiscount())
+                .loyaltyPointsUsed(order.getLoyaltyPointsUsed())
                 .branchId(order.getBranch().getId())
                 .cashierId(order.getCashier().getId())
                 .customer(order.getCustomer())

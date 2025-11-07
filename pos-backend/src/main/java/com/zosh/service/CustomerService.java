@@ -20,5 +20,11 @@ public interface CustomerService {
 
     List<Customer> searchCustomer(String keyword);
 
+    Customer addLoyaltyPoints(Long customerId, Integer points) throws ResourceNotFoundException;
+
+    Customer redeemLoyaltyPoints(Long customerId, Integer points) throws ResourceNotFoundException;
+
+    Integer calculatePointsFromAmount(Double amount);
+
 }
 

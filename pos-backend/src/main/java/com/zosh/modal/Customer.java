@@ -1,8 +1,6 @@
 package com.zosh.modal;
 
-import com.zosh.domain.UserRole;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,6 +29,8 @@ public class Customer {
 
     private String phone;
 
+    @Column(nullable = false)
+    private Integer loyaltyPoints = 0;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp

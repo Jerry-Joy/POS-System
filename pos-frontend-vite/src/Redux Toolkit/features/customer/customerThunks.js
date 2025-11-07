@@ -160,4 +160,74 @@ export const getAllCustomers = createAsyncThunk(
       return rejectWithValue(err.response?.data?.message || 'Failed to fetch customers');
     }
   }
+);
+
+// 🔹 Add Loyalty Points
+export const addLoyaltyPoints = createAsyncThunk(
+  'customer/addLoyaltyPoints',
+  async ({ customerId, points }, { rejectWithValue }) => {
+    try {
+      console.log('🔄 Adding loyalty points...', { customerId, points });
+      
+      const headers = getAuthHeaders();
+      const res = await api.post(
+        `/api/customers/${customerId}/loyalty-points/add?points=${points}`,
+        {},
+        { headers }
+      );
+      
+      console.log('✅ Loyalty points added successfully:', {
+        customerId: res.data.id,
+        name: res.data.fullName,
+        newBalance: res.data.loyaltyPoints,
+        pointsAdded: points
+      });
+      
+      return res.data;
+    } catch (err) {
+      console.error('❌ Failed to add loyalty points:', {
+        customerId,
+        points,
+        error: err.response?.data || err.message,
+        status: err.response?.status
+      });
+      
+      return rejectWithValue(err.response?.data?.message || 'Failed to add loyalty points');
+    }
+  }
+);
+
+// 🔹 Redeem Loyalty Points
+export const redeemLoyaltyPoints = createAsyncThunk(
+  'customer/redeemLoyaltyPoints',
+  async ({ customerId, points }, { rejectWithValue }) => {
+    try {
+      console.log('🔄 Redeeming loyalty points...', { customerId, points });
+      
+      const headers = getAuthHeaders();
+      const res = await api.post(
+        `/api/customers/${customerId}/loyalty-points/redeem?points=${points}`,
+        {},
+        { headers }
+      );
+      
+      console.log('✅ Loyalty points redeemed successfully:', {
+        customerId: res.data.id,
+        name: res.data.fullName,
+        newBalance: res.data.loyaltyPoints,
+        pointsRedeemed: points
+      });
+      
+      return res.data;
+    } catch (err) {
+      console.error('❌ Failed to redeem loyalty points:', {
+        customerId,
+        points,
+        error: err.response?.data || err.message,
+        status: err.response?.status
+      });
+      
+      return rejectWithValue(err.response?.data?.message || 'Failed to redeem loyalty points');
+    }
+  }
 ); 

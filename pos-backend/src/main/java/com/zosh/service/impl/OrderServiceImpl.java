@@ -29,6 +29,7 @@ public class OrderServiceImpl implements OrderService {
     private final BranchRepository branchRepository;
     private final UserService userService;
     private final InventoryRepository inventoryRepository;
+    private final CustomerRepository customerRepository;
 
     @Override
     public OrderDTO createOrder(OrderDTO dto) throws UserException {
@@ -75,9 +76,32 @@ public class OrderServiceImpl implements OrderService {
                     .build();
         }).toList();
 
-        double total = orderItems.stream().mapToDouble(OrderItem::getPrice).sum();
-        order.setTotalAmount(total);
+        double subtotal = orderItems.stream().mapToDouble(OrderItem::getPrice).sum();
+        
+        // Set order financial details
+        order.setSubtotal(subtotal);
+        order.setDiscount(dto.getDiscount() != null ? dto.getDiscount() : 0.0);
+        order.setLoyaltyPointsUsed(dto.getLoyaltyPointsUsed() != null ? dto.getLoyaltyPointsUsed() : 0);
+        order.setTotalAmount(subtotal - order.getDiscount());
         order.setItems(orderItems);
+
+        // ✅ Award loyalty points to customer (if customer exists)
+        if (dto.getCustomer() != null && dto.getCustomer().getId() != null) {
+            try {
+                Customer customer = customerRepository.findById(dto.getCustomer().getId())
+                        .orElse(null);
+                if (customer != null) {
+                    // Calculate points: 1 point per $1 spent (rounded down) - based on amount AFTER discount
+                    Integer pointsToAdd = (int) Math.floor(order.getTotalAmount());
+                    customer.setLoyaltyPoints(customer.getLoyaltyPoints() + pointsToAdd);
+                    customerRepository.save(customer);
+                    System.out.println("✅ Awarded " + pointsToAdd + " loyalty points to customer: " + customer.getFullName());
+                }
+            } catch (Exception e) {
+                System.err.println("⚠️ Failed to award loyalty points: " + e.getMessage());
+                // Don't fail the order if loyalty points update fails
+            }
+        }
 
         return OrderMapper.toDto(orderRepository.save(order));
     }

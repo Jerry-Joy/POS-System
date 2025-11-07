@@ -57,4 +57,33 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword, keyword);
     }
 
+    @Override
+    public Customer addLoyaltyPoints(Long customerId, Integer points) throws ResourceNotFoundException {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id " + customerId));
+        
+        customer.setLoyaltyPoints(customer.getLoyaltyPoints() + points);
+        return customerRepository.save(customer);
+    }
+
+    @Override
+    public Customer redeemLoyaltyPoints(Long customerId, Integer points) throws ResourceNotFoundException {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id " + customerId));
+        
+        if (customer.getLoyaltyPoints() < points) {
+            throw new IllegalStateException("Insufficient loyalty points. Available: " + 
+                customer.getLoyaltyPoints() + ", Required: " + points);
+        }
+        
+        customer.setLoyaltyPoints(customer.getLoyaltyPoints() - points);
+        return customerRepository.save(customer);
+    }
+
+    @Override
+    public Integer calculatePointsFromAmount(Double amount) {
+        // 1 point per $1 spent (rounded down)
+        return amount != null ? amount.intValue() : 0;
+    }
+
 }
