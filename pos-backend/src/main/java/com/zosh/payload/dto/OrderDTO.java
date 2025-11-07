@@ -17,6 +17,7 @@ public class OrderDTO {
     private Long id;
     private Double totalAmount;
     private Double subtotal;
+    private Double tax;
     private Double discount;
     private Integer loyaltyPointsUsed;
     private Long branchId;

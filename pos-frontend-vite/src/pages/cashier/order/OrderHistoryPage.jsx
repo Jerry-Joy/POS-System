@@ -270,13 +270,16 @@ const OrderHistoryPage = () => {
         onOpenChange={setShowOrderDetailsDialog}
       >
         {selectedOrder && (
-          <DialogContent className="max-w-3xl">
-            <DialogHeader>
+          <DialogContent className="max-w-4xl w-[min(92vw,64rem)] max-h-[90vh] flex flex-col p-0">
+            <DialogHeader className="px-6 pt-6 pb-4 border-b flex-shrink-0">
               <DialogTitle>Order Details - Invoice</DialogTitle>
             </DialogHeader>
-            <OrderDetails selectedOrder={selectedOrder} />
+            
+            <div className="px-6 py-4 overflow-y-auto flex-1">
+              <OrderDetails selectedOrder={selectedOrder} />
+            </div>
 
-            <DialogFooter className="gap-2 sm:gap-0 space-x-3">
+            <DialogFooter className="px-6 py-4 border-t flex-shrink-0 gap-2 sm:gap-0 space-x-3">
               <Button variant="outline" onClick={handleDownloadPDF}>
                 <Download className="h-4 w-4 mr-2" />
                 Download PDF

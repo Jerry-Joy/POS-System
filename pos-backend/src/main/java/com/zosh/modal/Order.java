@@ -24,7 +24,9 @@ public class Order {
 
     private Double totalAmount;
     
-    private Double subtotal; // Total before discount
+    private Double subtotal; // Total before discount and tax
+    
+    private Double tax; // Tax amount
     
     private Double discount; // Discount amount from loyalty points
     

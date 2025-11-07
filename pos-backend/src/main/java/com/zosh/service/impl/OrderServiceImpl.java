@@ -76,13 +76,15 @@ public class OrderServiceImpl implements OrderService {
                     .build();
         }).toList();
 
-        double subtotal = orderItems.stream().mapToDouble(OrderItem::getPrice).sum();
+        double itemsSubtotal = orderItems.stream().mapToDouble(OrderItem::getPrice).sum();
         
         // Set order financial details
-        order.setSubtotal(subtotal);
+        order.setSubtotal(dto.getSubtotal() != null ? dto.getSubtotal() : itemsSubtotal);
+        order.setTax(dto.getTax() != null ? dto.getTax() : 0.0);
         order.setDiscount(dto.getDiscount() != null ? dto.getDiscount() : 0.0);
         order.setLoyaltyPointsUsed(dto.getLoyaltyPointsUsed() != null ? dto.getLoyaltyPointsUsed() : 0);
-        order.setTotalAmount(subtotal - order.getDiscount());
+        // Total = Subtotal + Tax - Discount
+        order.setTotalAmount(order.getSubtotal() + order.getTax() - order.getDiscount());
         order.setItems(orderItems);
 
         // ✅ Award loyalty points to customer (if customer exists)

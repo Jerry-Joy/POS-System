@@ -17,6 +17,8 @@ import {
   selectNote,
   selectPaymentMethod,
   selectSelectedCustomer,
+  selectSubtotal,
+  selectTax,
   selectTotal,
   setCurrentOrder,
   setPaymentMethod,
@@ -40,6 +42,8 @@ const PaymentDialog = ({
   const dispatch = useDispatch();
 
   const selectedCustomer = useSelector(selectSelectedCustomer);
+  const subtotal = useSelector(selectSubtotal);
+  const tax = useSelector(selectTax);
   const total = useSelector(selectTotal);
   const note = useSelector(selectNote);
 
@@ -126,7 +130,8 @@ const PaymentDialog = ({
       // Prepare order data according to OrderDTO structure
       const orderData = {
         totalAmount: finalAmount,
-        subtotal: total, // Original total before discount
+        subtotal: subtotal, // Items subtotal before tax and discount
+        tax: tax, // Tax amount (18% GST)
         discount: currentDiscount, // Discount amount from loyalty points
         loyaltyPointsUsed: pointsToRedeem, // Number of points redeemed
         branchId: branch.id,
@@ -135,8 +140,8 @@ const PaymentDialog = ({
         items: cart.map((item) => ({
           productId: item.id,
           quantity: item.quantity,
-          price: item.price,
-          total: item.price * item.quantity,
+          price: item.sellingPrice,
+          total: item.sellingPrice * item.quantity,
         })),
         paymentType: paymentMethod,
         note: note || "",

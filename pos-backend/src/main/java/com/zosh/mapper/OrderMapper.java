@@ -13,6 +13,7 @@ public class OrderMapper {
                 .id(order.getId())
                 .totalAmount(order.getTotalAmount())
                 .subtotal(order.getSubtotal())
+                .tax(order.getTax())
                 .discount(order.getDiscount())
                 .loyaltyPointsUsed(order.getLoyaltyPointsUsed())
                 .branchId(order.getBranch().getId())
