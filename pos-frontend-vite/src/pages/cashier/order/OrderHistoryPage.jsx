@@ -105,6 +105,43 @@ const OrderHistoryPage = () => {
     }
   };
 
+  // Filter orders based on search term and date filter
+  const filteredOrders = orders.filter((order) => {
+    // Search filter
+    const searchLower = searchTerm.toLowerCase();
+    const matchesSearch =
+      !searchTerm ||
+      order.id?.toString().includes(searchLower) ||
+      order.customer?.fullName?.toLowerCase().includes(searchLower) ||
+      order.customer?.phone?.includes(searchTerm);
+
+    if (!matchesSearch) return false;
+
+    // Date filter
+    const orderDate = new Date(order.createdAt);
+    orderDate.setHours(0, 0, 0, 0);
+
+    if (dateFilter === "today") {
+      return orderDate.getTime() === today.getTime();
+    } else if (dateFilter === "week") {
+      return orderDate >= weekStart && orderDate <= today;
+    } else if (dateFilter === "month") {
+      const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+      return orderDate >= monthStart && orderDate <= today;
+    } else if (dateFilter === "custom") {
+      if (!customDateRange.start || !customDateRange.end) return true;
+      
+      const startDate = new Date(customDateRange.start);
+      startDate.setHours(0, 0, 0, 0);
+      const endDate = new Date(customDateRange.end);
+      endDate.setHours(23, 59, 59, 999);
+      
+      return orderDate >= startDate && orderDate <= endDate;
+    }
+
+    return true;
+  });
+
   return (
     <div className="h-full flex flex-col">
       <div className="p-4 bg-card border-b flex justify-between items-center">
@@ -211,9 +248,9 @@ const OrderHistoryPage = () => {
             <Loader2 className="animate-spin h-16 w-16 text-primary" />
             <p className="mt-4">Loading orders...</p>
           </div>
-        ) : orders.length > 0 ? (
+        ) : filteredOrders.length > 0 ? (
           <OrderTable
-            orders={orders}
+            orders={filteredOrders}
             handleInitiateReturn={handleInitiateReturn}
             handlePrintInvoice={handlePrintInvoice}
             handleViewOrder={handleViewOrder}
