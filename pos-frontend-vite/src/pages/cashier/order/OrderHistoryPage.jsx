@@ -76,10 +76,22 @@ const OrderHistoryPage = () => {
   };
 
   const handlePrintInvoice = (order) => {
-    toast({
-      title: "Printing Invoice",
-      description: `Printing invoice for order ${order.id}`,
-    });
+    try {
+      // Trigger the browser's print dialog
+      window.print();
+      
+      toast({
+        title: "Print Dialog Opened",
+        description: `Invoice for order #${order.id} is ready to print`,
+      });
+    } catch (error) {
+      console.error("Print error:", error);
+      toast({
+        title: "Print Failed",
+        description: "Failed to open print dialog. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleInitiateReturn = (order) => {

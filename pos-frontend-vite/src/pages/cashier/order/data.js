@@ -41,9 +41,9 @@
           return 'Cash';
         case 'CARD':
           return 'Card';
-        case 'UPI':
-          return 'UPI';
+        case 'MOBILE_MONEY':
+          return 'Mobile Money';
         default:
-          return mode;
+          return mode ?? '';
       }
     };
