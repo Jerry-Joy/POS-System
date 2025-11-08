@@ -46,6 +46,7 @@ const PaymentDialog = ({
   const tax = useSelector(selectTax);
   const total = useSelector(selectTotal);
   const note = useSelector(selectNote);
+  const taxPercentage = branch?.branch?.taxPercentage || 18;
 
   // Loyalty points redemption state
   const [pointsToRedeem, setPointsToRedeem] = useState(0);
@@ -131,7 +132,7 @@ const PaymentDialog = ({
       const orderData = {
         totalAmount: finalAmount,
         subtotal: subtotal, // Items subtotal before tax and discount
-        tax: tax, // Tax amount (18% GST)
+        tax: tax, // Tax amount (from branch tax settings)
         discount: currentDiscount, // Discount amount from loyalty points
         loyaltyPointsUsed: pointsToRedeem, // Number of points redeemed
         branchId: branch.id,

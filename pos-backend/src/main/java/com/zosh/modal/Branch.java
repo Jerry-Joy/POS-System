@@ -40,6 +40,8 @@ public class Branch {
 
     private LocalTime closeTime;
 
+    private Double taxPercentage = 18.0; // Default GST percentage
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

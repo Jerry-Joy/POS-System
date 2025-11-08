@@ -4,6 +4,7 @@ import com.zosh.modal.Order;
 import com.zosh.modal.User;
 import com.zosh.payload.StoreAnalysis.BranchSalesDTO;
 import com.zosh.payload.StoreAnalysis.PaymentInsightDTO;
+import com.zosh.payload.StoreAnalysis.RecentSaleDTO;
 import com.zosh.payload.StoreAnalysis.TimeSeriesPointDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByCustomerId(Long customerId);
@@ -135,6 +137,26 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
         GROUP BY o.branch.id
     """)
         List<BranchSalesDTO> getSalesByBranch(@Param("storeAdminId") Long storeAdminId);
+
+
+        @Query("""
+            SELECT new com.zosh.payload.StoreAnalysis.RecentSaleDTO(
+                o.id,
+                o.branch.name,
+                o.totalAmount,
+                o.createdAt,
+                o.paymentType
+            )
+            FROM Order o
+            WHERE o.branch.store.storeAdmin.id = :storeAdminId
+            ORDER BY o.createdAt DESC
+        """)
+        List<RecentSaleDTO> findRecentSalesByStoreAdmin(@Param("storeAdminId") Long storeAdminId,
+                                                        Pageable pageable);
+
+        default List<RecentSaleDTO> findRecentSalesByStoreAdmin(Long storeAdminId, int limit) {
+            return findRecentSalesByStoreAdmin(storeAdminId, org.springframework.data.domain.PageRequest.of(0, limit));
+        }
 
 
 

@@ -9,7 +9,8 @@ import {
   getSalesByBranch,
   getPaymentBreakdown,
   getBranchPerformance,
-  getStoreAlerts
+  getStoreAlerts,
+  getRecentSales
 } from './storeAnalyticsThunks';
 
 const initialState = {
@@ -32,6 +33,10 @@ const initialState = {
   
   // Alerts
   storeAlerts: null,
+
+  // Recent Sales Feed
+  recentSales: [],
+  recentSalesLoading: false,
   
   // Loading and Error States
   loading: false,
@@ -53,6 +58,8 @@ const storeAnalyticsSlice = createSlice({
       state.salesByBranch = [];
       state.branchPerformance = null;
       state.storeAlerts = null;
+      state.recentSales = [];
+      state.recentSalesLoading = false;
       state.error = null;
     },
     clearSalesData: (state) => {
@@ -197,6 +204,19 @@ const storeAnalyticsSlice = createSlice({
       })
       .addCase(getStoreAlerts.rejected, (state, action) => {
         state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Recent Sales
+      .addCase(getRecentSales.pending, (state) => {
+        state.recentSalesLoading = true;
+      })
+      .addCase(getRecentSales.fulfilled, (state, action) => {
+        state.recentSalesLoading = false;
+        state.recentSales = action.payload || [];
+      })
+      .addCase(getRecentSales.rejected, (state, action) => {
+        state.recentSalesLoading = false;
         state.error = action.payload;
       })
 

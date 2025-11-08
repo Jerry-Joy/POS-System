@@ -28,9 +28,10 @@ const BranchInfo = () => {
     address: "",
     phone: "",
     email: "",
-    openingTime: "",
-    closingTime: "",
+    openTime: "",
+    closeTime: "",
     workingDays: [],
+    taxPercentage: 18,
   });
 
   useEffect(() => {
@@ -40,9 +41,10 @@ const BranchInfo = () => {
         address: branch.address || "",
         phone: branch.phone || "",
         email: branch.email || "",
-        openingTime: branch.openingTime || "",
-        closingTime: branch.closingTime || "",
+        openTime: branch.openTime || "",
+        closeTime: branch.closeTime || "",
         workingDays: branch.workingDays || [],
+        taxPercentage: branch.taxPercentage || 18,
       });
     }
   }, [branch]);
@@ -150,9 +152,9 @@ const BranchInfo = () => {
                 <Input
                   id="opening-time"
                   type="time"
-                  value={branchInfo.openingTime}
+                  value={branchInfo.openTime}
                   onChange={(e) =>
-                    handleBranchInfoChange("openingTime", e.target.value)
+                    handleBranchInfoChange("openTime", e.target.value)
                   }
                 />
               </div>
@@ -166,9 +168,9 @@ const BranchInfo = () => {
                 <Input
                   id="closing-time"
                   type="time"
-                  value={branchInfo.closingTime}
+                  value={branchInfo.closeTime}
                   onChange={(e) =>
-                    handleBranchInfoChange("closingTime", e.target.value)
+                    handleBranchInfoChange("closeTime", e.target.value)
                   }
                 />
               </div>
@@ -214,6 +216,31 @@ const BranchInfo = () => {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+
+        <Separator />
+
+        <div>
+          <h3 className="text-lg font-medium mb-4">Tax Settings</h3>
+          <div className="space-y-2">
+            <label htmlFor="tax-percentage" className="text-sm font-medium">
+              Tax Percentage (GST %)
+            </label>
+            <Input
+              id="tax-percentage"
+              type="number"
+              min="0"
+              max="100"
+              step="0.01"
+              value={branchInfo.taxPercentage}
+              onChange={(e) =>
+                handleBranchInfoChange("taxPercentage", parseFloat(e.target.value) || 0)
+              }
+            />
+            <p className="text-xs text-gray-500">
+              This tax rate will be applied to all sales at this branch
+            </p>
           </div>
         </div>
 

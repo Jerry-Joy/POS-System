@@ -42,6 +42,9 @@ import java.util.List;
         // ⚠️ 7. Alerts & Health Monitoring: Important notifications
         // ⚠️ Alerts for low stock, no sales, refund spikes, and inactive employees
         StoreAlertDTO getStoreAlerts(Long storeAdminId);
+
+        // 🧾 Recent Sales list for dashboard cards
+        List<RecentSaleDTO> getRecentSales(Long storeAdminId, int limit);
     }
 
 

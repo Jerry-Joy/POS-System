@@ -336,3 +336,40 @@ export const getStoreAlerts = createAsyncThunk(
     }
   }
 ); 
+
+// 🔹 Get Recent Sales Feed
+export const getRecentSales = createAsyncThunk(
+  "storeAnalytics/getRecentSales",
+  async ({ storeAdminId, limit = 5 }, { rejectWithValue }) => {
+    try {
+      console.log('🔄 Fetching recent sales...', { storeAdminId, limit });
+
+      const headers = getAuthHeaders();
+      const res = await api.get(`/api/store/analytics/${storeAdminId}/sales/recent`, {
+        headers,
+        params: { limit }
+      });
+
+      console.log('✅ Recent sales fetched successfully:', {
+        storeAdminId,
+        limit,
+        count: res.data?.length || 0,
+        response: res.data
+      });
+
+      return res.data;
+    } catch (err) {
+      console.error('❌ Failed to fetch recent sales:', {
+        storeAdminId,
+        limit,
+        error: err.response?.data || err.message,
+        status: err.response?.status,
+        statusText: err.response?.statusText
+      });
+
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to fetch recent sales"
+      );
+    }
+  }
+);

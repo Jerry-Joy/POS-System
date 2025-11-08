@@ -74,4 +74,11 @@ public class StoreAnalyticsController {
     public StoreAlertDTO getStoreAlerts(@PathVariable Long storeAdminId) {
         return storeAnalyticsService.getStoreAlerts(storeAdminId);
     }
+
+    // 🧾 Recent Sales List
+    @GetMapping("/{storeAdminId}/sales/recent")
+    public List<RecentSaleDTO> getRecentSales(@PathVariable Long storeAdminId,
+                                              @RequestParam(defaultValue = "5") int limit) {
+        return storeAnalyticsService.getRecentSales(storeAdminId, limit);
+    }
 }

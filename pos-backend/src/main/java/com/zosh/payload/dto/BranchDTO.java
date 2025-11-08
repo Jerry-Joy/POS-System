@@ -19,6 +19,7 @@ public class BranchDTO {
     private List<String> workingDays;
     private LocalTime openTime;
     private LocalTime closeTime;
+    private Double taxPercentage;
     private Long storeId;
     private StoreDTO store;
     private LocalDateTime createdAt;

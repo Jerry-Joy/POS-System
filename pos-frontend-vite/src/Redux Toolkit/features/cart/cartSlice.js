@@ -138,7 +138,9 @@ export const selectSubtotal = (state) => {
 
 export const selectTax = (state) => {
   const subtotal = selectSubtotal(state);
-  return subtotal * 0.18; // 18% GST
+  const branch = state.branch?.branch; // Get branch from Redux store
+  const taxPercentage = branch?.taxPercentage || 18; // Default to 18% if not set
+  return subtotal * (taxPercentage / 100);
 };
 
 export const selectDiscountAmount = (state) => {

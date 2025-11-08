@@ -17,6 +17,7 @@ public class BranchMapper {
                 .closeTime(branch.getCloseTime())
                 .openTime(branch.getOpenTime())
                 .workingDays(branch.getWorkingDays())
+                .taxPercentage(branch.getTaxPercentage())
                 .storeId(branch.getStore() != null ? branch.getStore().getId() : null)
                 .store(StoreMapper.toDto(branch.getStore()))
                 .createdAt(branch.getCreatedAt())
@@ -37,6 +38,7 @@ public class BranchMapper {
                 .closeTime(dto.getCloseTime())
                 .openTime(dto.getOpenTime())
                 .workingDays(dto.getWorkingDays())
+                .taxPercentage(dto.getTaxPercentage())
                 .createdAt(dto.getCreatedAt())
                 .updatedAt(dto.getUpdatedAt())
 

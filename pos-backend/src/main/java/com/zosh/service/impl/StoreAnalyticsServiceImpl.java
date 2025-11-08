@@ -130,4 +130,9 @@ public class StoreAnalyticsServiceImpl implements StoreAnalyticsService {
                 .inactiveCashiers(userRepository.findInactiveCashiers(storeAdminId, sevenDaysAgo))
                 .build();
     }
+
+    @Override
+    public List<RecentSaleDTO> getRecentSales(Long storeAdminId, int limit) {
+        return orderRepository.findRecentSalesByStoreAdmin(storeAdminId, limit);
+    }
 }

@@ -13,6 +13,8 @@ const CartSummary = () => {
   const tax = useSelector(selectTax);
   const discountAmount = useSelector(selectDiscountAmount);
   const total = useSelector(selectTotal);
+  const branch = useSelector((state) => state.branch?.branch);
+  const taxPercentage = branch?.taxPercentage || 18;
 
   return (
     <div className="border-t bg-muted p-4">
@@ -22,7 +24,7 @@ const CartSummary = () => {
           <span>${subtotal.toFixed(2)}</span>
         </div>
         <div className="flex justify-between">
-          <span>Tax (18% GST):</span>
+          <span>Tax ({taxPercentage}% GST):</span>
           <span>${tax.toFixed(2)}</span>
         </div>
         <div className="flex justify-between">
