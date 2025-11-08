@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -29,6 +29,7 @@ import OrderDetails from "./OrderDetails/OrderDetails";
 
 import OrderTable from "./OrderTable";
 import { handleDownloadOrderPDF } from "./pdf/pdfUtils";
+import { openPrintWindow } from "./utils/printHelpers";
 
 const OrderHistoryPage = () => {
   const dispatch = useDispatch();
@@ -44,6 +45,8 @@ const OrderHistoryPage = () => {
   });
   const [showOrderDetailsDialog, setShowOrderDetailsDialog] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [pendingPrintOrder, setPendingPrintOrder] = useState(null);
+  const printContainerRef = useRef(null);
 
   // Fetch orders when component mounts
   useEffect(() => {
@@ -76,23 +79,39 @@ const OrderHistoryPage = () => {
   };
 
   const handlePrintInvoice = (order) => {
+    setPendingPrintOrder(order);
+  };
+
+  useEffect(() => {
+    if (!pendingPrintOrder || !printContainerRef.current) {
+      return;
+    }
+
+    const html = printContainerRef.current.innerHTML;
+
+    if (!html || !html.trim()) {
+      return;
+    }
+
     try {
-      // Trigger the browser's print dialog
-      window.print();
-      
-      toast({
-        title: "Print Dialog Opened",
-        description: `Invoice for order #${order.id} is ready to print`,
+      openPrintWindow({
+        title: `Invoice - ${pendingPrintOrder.orderNumber ?? pendingPrintOrder.id ?? "Order"}`,
+        content: html,
+        toast,
+        successDescription: `Invoice for order #${pendingPrintOrder.id ?? ""} is ready to print`,
       });
     } catch (error) {
       console.error("Print error:", error);
       toast({
         title: "Print Failed",
-        description: "Failed to open print dialog. Please try again.",
+        description:
+          error.message || "Failed to open print dialog. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setPendingPrintOrder(null);
     }
-  };
+  }, [pendingPrintOrder, toast]);
 
   const handleInitiateReturn = (order) => {
     // In a real app, this would navigate to the return page with the order pre-selected
@@ -156,6 +175,20 @@ const OrderHistoryPage = () => {
 
   return (
     <div className="h-full flex flex-col">
+      {/* Hidden print container for order history printing */}
+      <div className="hidden" aria-hidden="true">
+        <div ref={printContainerRef} className="max-w-4xl w-full">
+          <div className="px-6 pt-6 pb-4 border-b bg-background">
+            <h2 className="text-lg font-semibold">Order Details - Invoice</h2>
+          </div>
+          <div className="px-6 py-4">
+            {pendingPrintOrder && (
+              <OrderDetails selectedOrder={pendingPrintOrder} />
+            )}
+          </div>
+        </div>
+      </div>
+
       <div className="p-4 bg-card border-b flex justify-between items-center">
         <h1 className="text-2xl font-bold">Order History</h1>
         <Button

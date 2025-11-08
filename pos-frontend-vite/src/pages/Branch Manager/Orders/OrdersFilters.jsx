@@ -61,7 +61,7 @@ const OrdersFilters = () => {
           <SelectContent>
             <SelectItem value="all">All Payment Modes</SelectItem>
             <SelectItem value="Cash">Cash</SelectItem>
-            <SelectItem value="UPI">UPI</SelectItem>
+            <SelectItem value="Mobile Money">Mobile Money</SelectItem>
             <SelectItem value="Card">Card</SelectItem>
           </SelectContent>
         </Select>

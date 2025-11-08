@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogClose,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,12 +21,12 @@ const OrderDetailsDialog = ({
 }) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
+      <DialogContent className="max-w-3xl w-[min(92vw,56rem)] p-0 overflow-hidden max-h-[90vh] flex flex-col">
+        <DialogHeader className="px-6 pt-6 pb-4 border-b flex-shrink-0">
           <DialogTitle>Order Details</DialogTitle>
         </DialogHeader>
         {selectedOrder && (
-          <div className="space-y-4">
+          <div className="px-6 py-4 space-y-4 overflow-y-auto flex-1">
             {/* Order Summary */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -98,13 +99,15 @@ const OrderDetailsDialog = ({
             <div className="overflow-x-auto">
               <OrderItemTable selectedOrder={selectedOrder} />
             </div>
-            <DialogClose asChild>
-              <Button className="mt-4 w-full" variant="outline">
-                Close
-              </Button>
-            </DialogClose>
           </div>
         )}
+        <DialogFooter className="px-6 py-4 border-t flex-shrink-0">
+          <DialogClose asChild>
+            <Button className="w-full sm:w-auto" variant="outline">
+              Close
+            </Button>
+          </DialogClose>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
