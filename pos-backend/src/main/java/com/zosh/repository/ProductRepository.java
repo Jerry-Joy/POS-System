@@ -57,6 +57,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 p.category.name,
                 p.store.id,
                 p.image,
+                CASE WHEN p.taxCategory IS NOT NULL THEN p.taxCategory.id ELSE NULL END,
+                NULL,
+                CASE WHEN p.taxExempt IS NOT NULL THEN p.taxExempt ELSE FALSE END,
                 p.createdAt,
                 p.updatedAt
             )

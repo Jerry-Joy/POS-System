@@ -3,6 +3,7 @@ import StoreSettings from "./StoreSettings";
 import NotificationSettings from "./NotificationSettings";
 import SecuritySettings from "./SecuritySettings";
 import PaymentSettings from "./PaymentSettings";
+import TaxCategoryManagement from "./TaxCategoryManagement";
 import { Save } from "lucide-react";
 import { Button } from "../../../../components/ui/button";
 
@@ -41,6 +42,10 @@ const SettingsContent = ({
         settings={paymentSettings}
         onChange={onPaymentSettingsChange}
       />
+
+      <div id="tax-settings">
+        <TaxCategoryManagement />
+      </div>
 
       <Button className="" variant={"outline"} onClick={onSave}>
         <Save className="mr-2 h-4 w-4" /> Save All Settings

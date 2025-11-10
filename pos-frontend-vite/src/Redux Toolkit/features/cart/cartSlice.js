@@ -137,10 +137,65 @@ export const selectSubtotal = (state) => {
 };
 
 export const selectTax = (state) => {
-  const subtotal = selectSubtotal(state);
-  const branch = state.branch?.branch; // Get branch from Redux store
-  const taxPercentage = branch?.taxPercentage || 18; // Default to 18% if not set
-  return subtotal * (taxPercentage / 100);
+  const taxBreakdown = selectTaxBreakdown(state);
+  return taxBreakdown.reduce((total, item) => total + item.taxAmount, 0);
+};
+
+// New selector for detailed tax breakdown by category
+export const selectTaxBreakdown = (state) => {
+  const items = state.cart.items;
+  const branch = state.branch?.branch;
+  const defaultTaxPercentage = branch?.taxPercentage || 18;
+
+  // Group items by tax category
+  const taxGroups = {};
+
+  items.forEach((item) => {
+    let taxKey, taxName, taxPercentage, taxType;
+
+    // Determine tax rate for this item
+    if (item.taxExempt) {
+      taxKey = 'exempt';
+      taxName = 'Tax Exempt';
+      taxPercentage = 0;
+      taxType = 'EXCLUSIVE';
+    } else if (item.taxCategory) {
+      taxKey = `category_${item.taxCategory.id}`;
+      taxName = item.taxCategory.name;
+      taxPercentage = item.taxCategory.percentage;
+      taxType = item.taxCategory.taxType;
+    } else {
+      taxKey = 'default';
+      taxName = 'Standard Tax';
+      taxPercentage = defaultTaxPercentage;
+      taxType = 'EXCLUSIVE';
+    }
+
+    if (!taxGroups[taxKey]) {
+      taxGroups[taxKey] = {
+        name: taxName,
+        percentage: taxPercentage,
+        taxType: taxType,
+        subtotal: 0,
+        taxAmount: 0,
+      };
+    }
+
+    const itemSubtotal = item.sellingPrice * item.quantity;
+    taxGroups[taxKey].subtotal += itemSubtotal;
+
+    // Calculate tax based on type
+    if (taxType === 'INCLUSIVE') {
+      // Tax is already included in price: taxAmount = price - (price / (1 + rate))
+      const taxAmount = itemSubtotal - (itemSubtotal / (1 + taxPercentage / 100));
+      taxGroups[taxKey].taxAmount += taxAmount;
+    } else {
+      // EXCLUSIVE: tax is added to price
+      taxGroups[taxKey].taxAmount += itemSubtotal * (taxPercentage / 100);
+    }
+  });
+
+  return Object.values(taxGroups);
 };
 
 export const selectDiscountAmount = (state) => {

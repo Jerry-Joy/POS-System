@@ -24,6 +24,7 @@ public class OrderDTO {
     private Long cashierId;
     private Customer customer;
     private List<OrderItemDTO> items;
+    private List<OrderTaxBreakdownDTO> taxBreakdowns; // Detailed tax breakdown
     private LocalDateTime createdAt;
     private PaymentType paymentType;
     private OrderStatus status;

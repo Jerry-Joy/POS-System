@@ -7,9 +7,11 @@ import com.zosh.exception.UserException;
 import com.zosh.mapper.OrderMapper;
 import com.zosh.modal.*;
 import com.zosh.payload.dto.OrderDTO;
+import com.zosh.payload.dto.TaxCalculationResult;
 import com.zosh.repository.*;
 
 import com.zosh.service.OrderService;
+import com.zosh.service.TaxService;
 import com.zosh.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +33,8 @@ public class OrderServiceImpl implements OrderService {
     private final UserService userService;
     private final InventoryRepository inventoryRepository;
     private final CustomerRepository customerRepository;
+    private final TaxService taxService;
+    private final OrderTaxBreakdownRepository orderTaxBreakdownRepository;
 
     @Override
     public OrderDTO createOrder(OrderDTO dto) throws UserException {
@@ -78,14 +83,52 @@ public class OrderServiceImpl implements OrderService {
 
         double itemsSubtotal = orderItems.stream().mapToDouble(OrderItem::getPrice).sum();
         
+        // Set order items first (needed for tax calculation)
+        order.setItems(orderItems);
+        
         // Set order financial details
         order.setSubtotal(dto.getSubtotal() != null ? dto.getSubtotal() : itemsSubtotal);
-        order.setTax(dto.getTax() != null ? dto.getTax() : 0.0);
         order.setDiscount(dto.getDiscount() != null ? dto.getDiscount() : 0.0);
         order.setLoyaltyPointsUsed(dto.getLoyaltyPointsUsed() != null ? dto.getLoyaltyPointsUsed() : 0);
+        
+        // ✅ AUTOMATIC TAX CALCULATION
+        // Calculate tax automatically based on products and their tax categories
+        TaxCalculationResult taxResult = taxService.calculateOrderTax(orderItems, branch.getId());
+        order.setTax(taxResult.getTotalTax());
+        
+        // If frontend provided a tax amount, use it instead (for backwards compatibility)
+        if (dto.getTax() != null && dto.getTax() > 0) {
+            order.setTax(dto.getTax());
+        }
+        
         // Total = Subtotal + Tax - Discount
         order.setTotalAmount(order.getSubtotal() + order.getTax() - order.getDiscount());
-        order.setItems(orderItems);
+
+        // Save the order first to get an ID
+        Order savedOrder = orderRepository.save(order);
+        
+        // ✅ Create tax breakdown records
+        List<OrderTaxBreakdown> taxBreakdowns = new ArrayList<>();
+        for (TaxCalculationResult.TaxBreakdownItem breakdownItem : taxResult.getBreakdown()) {
+            TaxCategory taxCategory = new TaxCategory();
+            taxCategory.setId(breakdownItem.getTaxCategoryId());
+            
+            OrderTaxBreakdown breakdown = OrderTaxBreakdown.builder()
+                    .order(savedOrder)
+                    .taxCategory(taxCategory)
+                    .taxableAmount(breakdownItem.getTaxableAmount())
+                    .taxAmount(breakdownItem.getTaxAmount())
+                    .taxPercentage(breakdownItem.getPercentage())
+                    .taxCategoryName(breakdownItem.getTaxCategoryName())
+                    .build();
+            
+            taxBreakdowns.add(breakdown);
+        }
+        
+        if (!taxBreakdowns.isEmpty()) {
+            orderTaxBreakdownRepository.saveAll(taxBreakdowns);
+            savedOrder.setTaxBreakdowns(taxBreakdowns);
+        }
 
         // ✅ Award loyalty points to customer (if customer exists)
         if (dto.getCustomer() != null && dto.getCustomer().getId() != null) {
@@ -94,7 +137,7 @@ public class OrderServiceImpl implements OrderService {
                         .orElse(null);
                 if (customer != null) {
                     // Calculate points: 1 point per $1 spent (rounded down) - based on amount AFTER discount
-                    Integer pointsToAdd = (int) Math.floor(order.getTotalAmount());
+                    Integer pointsToAdd = (int) Math.floor(savedOrder.getTotalAmount());
                     customer.setLoyaltyPoints(customer.getLoyaltyPoints() + pointsToAdd);
                     customerRepository.save(customer);
                     System.out.println("✅ Awarded " + pointsToAdd + " loyalty points to customer: " + customer.getFullName());
@@ -105,7 +148,7 @@ public class OrderServiceImpl implements OrderService {
             }
         }
 
-        return OrderMapper.toDto(orderRepository.save(order));
+        return OrderMapper.toDto(savedOrder);
     }
 
     @Override

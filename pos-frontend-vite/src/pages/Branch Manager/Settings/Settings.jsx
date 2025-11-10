@@ -29,6 +29,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getBranchById } from "@/Redux Toolkit/features/branch/branchThunks";
 import BranchInfo from "./BranchInfo";
+import BranchTaxSettings from "./BranchTaxSettings";
 
 const Settings = () => {
   const dispatch = useDispatch();
@@ -65,13 +66,6 @@ const Settings = () => {
     footerText: "Thank you for shopping with us!",
   });
 
-  const [taxSettings, setTaxSettings] = useState({
-    gstEnabled: true,
-    gstPercentage: 18,
-    applyGstToAll: true,
-    showTaxBreakdown: true,
-  });
-
   const [paymentSettings, setPaymentSettings] = useState({
     acceptCash: true,
     acceptUPI: true,
@@ -95,13 +89,6 @@ const Settings = () => {
   const handlePrinterSettingsChange = (field, value) => {
     setPrinterSettings({
       ...printerSettings,
-      [field]: value,
-    });
-  };
-
-  const handleTaxSettingsChange = (field, value) => {
-    setTaxSettings({
-      ...taxSettings,
       [field]: value,
     });
   };
@@ -287,98 +274,7 @@ const Settings = () => {
 
         {/* Tax Settings Tab */}
         <TabsContent value="tax">
-          <Card>
-            <CardHeader>
-              <CardTitle>Tax Settings</CardTitle>
-              <CardDescription>
-                Configure tax rates and rules for your branch.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <label htmlFor="gst-enabled" className="text-sm font-medium">
-                    Enable GST
-                  </label>
-                  <Switch
-                    id="gst-enabled"
-                    checked={taxSettings.gstEnabled}
-                    onCheckedChange={(checked) =>
-                      handleTaxSettingsChange("gstEnabled", checked)
-                    }
-                  />
-                </div>
-
-                {taxSettings.gstEnabled && (
-                  <div className="space-y-4 pl-6 border-l-2 border-gray-100">
-                    <div className="space-y-2">
-                      <label
-                        htmlFor="gst-percentage"
-                        className="text-sm font-medium"
-                      >
-                        GST Percentage (%)
-                      </label>
-                      <Input
-                        id="gst-percentage"
-                        type="number"
-                        min="0"
-                        max="100"
-                        value={taxSettings.gstPercentage}
-                        onChange={(e) =>
-                          handleTaxSettingsChange(
-                            "gstPercentage",
-                            parseInt(e.target.value)
-                          )
-                        }
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <label
-                        htmlFor="apply-gst-all"
-                        className="text-sm font-medium"
-                      >
-                        Apply GST to All Products
-                      </label>
-                      <Switch
-                        id="apply-gst-all"
-                        checked={taxSettings.applyGstToAll}
-                        onCheckedChange={(checked) =>
-                          handleTaxSettingsChange("applyGstToAll", checked)
-                        }
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <label
-                        htmlFor="show-tax-breakdown"
-                        className="text-sm font-medium"
-                      >
-                        Show Tax Breakdown on Receipt
-                      </label>
-                      <Switch
-                        id="show-tax-breakdown"
-                        checked={taxSettings.showTaxBreakdown}
-                        onCheckedChange={(checked) =>
-                          handleTaxSettingsChange("showTaxBreakdown", checked)
-                        }
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex justify-end">
-                <Button
-                  className="gap-2"
-                  onClick={() => handleSaveSettings("tax")}
-                >
-                  <Save className="h-4 w-4" />
-                  Save Changes
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <BranchTaxSettings />
         </TabsContent>
 
         {/* Payment Settings Tab */}

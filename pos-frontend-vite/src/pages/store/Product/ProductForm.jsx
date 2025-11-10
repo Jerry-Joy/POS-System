@@ -22,6 +22,8 @@ import { PhoneOutgoing } from "lucide-react";
 import { X } from "lucide-react";
 import { useState } from "react";
 import { uploadToCloudinary } from "../../../utils/uploadToCloudinary";
+import api from "../../../utils/api";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Product name is required"),
@@ -50,6 +52,9 @@ const ProductForm = ({
   const { store } = useSelector((state) => state.store);
   const { categories: categoryList } = useSelector((state) => state.category);
   const [uploadImage, setUploadingImage] = useState(false);
+  const [taxCategories, setTaxCategories] = useState([]);
+  
+  // Prepare default values - convert taxCategoryId to string for Select component
   const defaultValues = {
     name: "",
     sku: "",
@@ -60,18 +65,33 @@ const ProductForm = ({
     categoryId: "",
     color: "",
     image: null,
+    taxCategoryId: "none",
+    taxExempt: false,
     ...initialValues,
+    // Convert taxCategoryId to string if it exists
+    taxCategoryId: initialValues?.taxCategoryId 
+      ? String(initialValues.taxCategoryId) 
+      : (initialValues?.taxExempt ? "none" : "none"),
   };
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
       const token = localStorage.getItem("jwt");
+      
+      // Handle taxCategoryId: convert "none" to null, otherwise parse as integer
+      let taxCategoryId = null;
+      if (values.taxCategoryId && values.taxCategoryId !== "none") {
+        taxCategoryId = parseInt(values.taxCategoryId);
+      }
+      
       const dto = {
         ...values,
         mrp: parseFloat(values.mrp),
         sellingPrice: parseFloat(values.sellingPrice),
         storeId: store.id,
         categoryId: parseInt(values.categoryId),
+        taxCategoryId: taxCategoryId,
+        taxExempt: values.taxExempt || false,
       };
 
       console.log("Product form data:", dto);
@@ -103,9 +123,22 @@ const ProductForm = ({
   };
 
   useEffect(() => {
+    const loadTaxCategories = async () => {
+      try {
+        const token = localStorage.getItem("jwt");
+        const response = await api.get(`/api/tax-categories/store/${store.id}/active`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setTaxCategories(response.data);
+      } catch (error) {
+        console.error("Failed to load tax categories:", error);
+      }
+    };
+
     const token = localStorage.getItem("jwt");
     if (store?.id && token) {
       dispatch(getCategoriesByStore({ storeId: store.id, token }));
+      loadTaxCategories();
     }
   }, [dispatch, store]);
 
@@ -126,7 +159,7 @@ const ProductForm = ({
     >
       {({ isSubmitting, touched, errors, values, setFieldValue }) => (
         <Form className="space-y-4 py-2 pr-2">
-          <div className="flex flex-wrap gap-5" item xs={12}>
+          <div className="flex flex-wrap gap-5">
             {!values.image ? (
               <>
                 {" "}
@@ -347,6 +380,66 @@ const ProductForm = ({
               placeholder="Enter product description"
               rows={3}
             />
+          </div>
+
+          <div className="space-y-4 border-t pt-4">
+            <h3 className="text-sm font-semibold">Tax Settings</h3>
+            
+            <div className="space-y-2">
+              <label htmlFor="taxCategoryId" className="block text-sm font-medium">
+                Tax Category
+              </label>
+              <Field name="taxCategoryId">
+                {({ field }) => (
+                  <Select
+                    value={field.value || "none"}
+                    onValueChange={(value) => setFieldValue("taxCategoryId", value === "none" ? "" : value)}
+                    disabled={values.taxExempt}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select tax category (optional)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">No Tax Category</SelectItem>
+                      {taxCategories.map((tax) => (
+                        <SelectItem key={tax.id} value={tax.id.toString()}>
+                          {tax.name} ({tax.percentage}% - {tax.taxType})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              </Field>
+              <p className="text-xs text-gray-500">
+                If not selected, branch default tax rate will be applied
+              </p>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Field name="taxExempt">
+                {({ field }) => (
+                  <Checkbox
+                    id="taxExempt"
+                    checked={field.value}
+                    onCheckedChange={(checked) => {
+                      setFieldValue("taxExempt", checked);
+                      if (checked) {
+                        setFieldValue("taxCategoryId", "");
+                      }
+                    }}
+                  />
+                )}
+              </Field>
+              <label
+                htmlFor="taxExempt"
+                className="text-sm font-medium cursor-pointer"
+              >
+                Tax Exempt Product
+              </label>
+            </div>
+            <p className="text-xs text-gray-500">
+              Check this for products that should not have any tax applied (e.g., medicines, essentials)
+            </p>
           </div>
 
           <div className="flex justify-end gap-3 pt-4">

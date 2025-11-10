@@ -1,18 +1,51 @@
 import { Card, CardContent } from "../../../components/ui/card";
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
-import { Minus } from "lucide-react";
-import { Plus } from "lucide-react";
-import { Trash2 } from "lucide-react";
+import { Minus, Plus, Trash2, ShieldCheck } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const CartItem = ({item,updateCartItemQuantity,removeFromCart}) => {
+  const branch = useSelector((state) => state.branch?.branch);
+  const defaultTaxPercentage = branch?.taxPercentage || 18;
+  
+  // Determine tax display for this item
+  const getTaxInfo = () => {
+    if (item.taxExempt) {
+      return { label: "Tax Exempt", color: "bg-blue-100 text-blue-800", percentage: "0%" };
+    } else if (item.taxCategory) {
+      return { 
+        label: item.taxCategory.name, 
+        color: "bg-purple-100 text-purple-800",
+        percentage: `${item.taxCategory.percentage}%`
+      };
+    } else {
+      return { 
+        label: "Standard Tax", 
+        color: "bg-gray-100 text-gray-800",
+        percentage: `${defaultTaxPercentage}%`
+      };
+    }
+  };
+
+  const taxInfo = getTaxInfo();
+
   return (
       <Card key={item.id} className="border-l-4 border-l-green-700">
                 <CardContent className="p-3">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
-                      <h3 className="font-medium">{item.name}</h3>
-                      <p className="text-sm text-muted-foreground">{item.sku}</p>
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-medium">{item.name}</h3>
+                        {item.taxExempt && (
+                          <ShieldCheck className="w-4 h-4 text-blue-600" />
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm text-muted-foreground">{item.sku}</p>
+                        <Badge variant="outline" className={`text-xs ${taxInfo.color}`}>
+                          {taxInfo.percentage}
+                        </Badge>
+                      </div>
                     </div>
                     <div className="flex items-center space-x-2">
                       <div className="flex items-center border rounded">

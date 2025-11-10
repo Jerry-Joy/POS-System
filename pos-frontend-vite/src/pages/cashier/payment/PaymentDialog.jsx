@@ -19,6 +19,7 @@ import {
   selectSelectedCustomer,
   selectSubtotal,
   selectTax,
+  selectTaxBreakdown,
   selectTotal,
   setCurrentOrder,
   setPaymentMethod,
@@ -44,9 +45,9 @@ const PaymentDialog = ({
   const selectedCustomer = useSelector(selectSelectedCustomer);
   const subtotal = useSelector(selectSubtotal);
   const tax = useSelector(selectTax);
+  const taxBreakdown = useSelector(selectTaxBreakdown);
   const total = useSelector(selectTotal);
   const note = useSelector(selectNote);
-  const taxPercentage = branch?.branch?.taxPercentage || 18;
 
   // Loyalty points redemption state
   const [pointsToRedeem, setPointsToRedeem] = useState(0);
@@ -181,9 +182,41 @@ const PaymentDialog = ({
         </DialogHeader>
 
         <div className="space-y-4 overflow-y-auto pr-2 flex-1">
+          {/* Order Summary */}
+          <div className="border rounded-lg p-4 space-y-2 text-sm">
+            <h3 className="font-semibold mb-2">Order Summary</h3>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Subtotal:</span>
+              <span>${subtotal.toFixed(2)}</span>
+            </div>
+            
+            {/* Tax Breakdown */}
+            <div className="space-y-1">
+              <div className="flex justify-between font-medium">
+                <span className="text-muted-foreground">Tax:</span>
+                <span>${tax.toFixed(2)}</span>
+              </div>
+              {taxBreakdown.length > 0 && (
+                <div className="pl-4 space-y-1 text-xs text-muted-foreground">
+                  {taxBreakdown.map((item, index) => (
+                    <div key={index} className="flex justify-between">
+                      <span>• {item.name} ({item.percentage}%):</span>
+                      <span>${item.taxAmount.toFixed(2)}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            <div className="border-t pt-2 flex justify-between font-semibold">
+              <span>Total:</span>
+              <span>${total.toFixed(2)}</span>
+            </div>
+          </div>
+
           {/* Order Total */}
           <div className="text-center p-4 bg-muted rounded-lg">
-            <p className="text-sm text-muted-foreground mb-1">Order Total</p>
+            <p className="text-sm text-muted-foreground mb-1">Amount to Pay</p>
             <div className="text-3xl font-bold">
               ${total.toFixed(2)}
             </div>

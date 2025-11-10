@@ -1,5 +1,5 @@
 import React from "react";
-import { Store, Bell, Shield, CreditCard, Database, HelpCircle } from "lucide-react";
+import { Store, Bell, Shield, CreditCard, Database, HelpCircle, Receipt } from "lucide-react";
 
 const SettingsNavigation = ({ activeSection }) => {
   const navItems = [
@@ -26,6 +26,12 @@ const SettingsNavigation = ({ activeSection }) => {
       label: "Payment Settings",
       icon: CreditCard,
       href: "#payment-settings"
+    },
+    {
+      id: "tax-settings",
+      label: "Tax Categories",
+      icon: Receipt,
+      href: "#tax-settings"
     },
     {
       id: "system-settings",

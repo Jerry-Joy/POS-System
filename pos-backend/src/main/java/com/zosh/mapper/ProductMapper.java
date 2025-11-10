@@ -3,6 +3,7 @@ package com.zosh.mapper;
 import com.zosh.modal.Category;
 import com.zosh.modal.Product;
 import com.zosh.modal.Store;
+import com.zosh.modal.TaxCategory;
 import com.zosh.payload.dto.ProductDTO;
 
 public class ProductMapper {
@@ -20,6 +21,9 @@ public class ProductMapper {
                 .categoryId(product.getCategory().getId())
                 .storeId(product.getStore() != null ? product.getStore().getId() : null)
                 .image(product.getImage())
+                .taxCategoryId(product.getTaxCategory() != null ? product.getTaxCategory().getId() : null)
+                .taxCategory(product.getTaxCategory() != null ? TaxCategoryMapper.toDto(product.getTaxCategory()) : null)
+                .taxExempt(product.getTaxExempt())
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .build();
@@ -27,7 +31,8 @@ public class ProductMapper {
 
     public static Product toEntity(ProductDTO dto,
                                    Store store,
-                                   Category category) {
+                                   Category category,
+                                   TaxCategory taxCategory) {
         return Product.builder()
                 .id(dto.getId())
                 .name(dto.getName())
@@ -37,7 +42,8 @@ public class ProductMapper {
                 .sellingPrice(dto.getSellingPrice())
                 .brand(dto.getBrand())
                 .category(category)
-
+                .taxCategory(taxCategory)
+                .taxExempt(dto.getTaxExempt() != null ? dto.getTaxExempt() : false)
                 .store(store)
                 .image(dto.getImage())
                 .createdAt(dto.getCreatedAt())

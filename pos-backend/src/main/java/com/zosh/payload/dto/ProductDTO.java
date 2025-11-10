@@ -21,6 +21,9 @@ public class ProductDTO {
     private String category;
     private Long storeId;
     private String image;
+    private Long taxCategoryId; // Tax category ID
+    private TaxCategoryDTO taxCategory; // Tax category details
+    private Boolean taxExempt; // Whether this product is tax-exempt
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

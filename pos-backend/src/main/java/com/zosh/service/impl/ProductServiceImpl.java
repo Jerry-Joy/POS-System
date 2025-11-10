@@ -7,11 +7,13 @@ import com.zosh.mapper.ProductMapper;
 import com.zosh.modal.Category;
 import com.zosh.modal.Product;
 import com.zosh.modal.Store;
+import com.zosh.modal.TaxCategory;
 import com.zosh.modal.User;
 import com.zosh.payload.dto.ProductDTO;
 import com.zosh.repository.CategoryRepository;
 import com.zosh.repository.ProductRepository;
 import com.zosh.repository.StoreRepository;
+import com.zosh.repository.TaxCategoryRepository;
 import com.zosh.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final StoreRepository storeRepository;
     private final CategoryRepository categoryRepository;
+    private final TaxCategoryRepository taxCategoryRepository;
 
     @Override
     public ProductDTO createProduct(ProductDTO dto, User user) throws AccessDeniedException {
@@ -38,7 +41,14 @@ public class ProductServiceImpl implements ProductService {
         Category category = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new EntityNotFoundException("Category not found"));
 
-        Product product = ProductMapper.toEntity(dto, store, category);
+        // Handle tax category (optional)
+        TaxCategory taxCategory = null;
+        if (dto.getTaxCategoryId() != null) {
+            taxCategory = taxCategoryRepository.findById(dto.getTaxCategoryId())
+                    .orElseThrow(() -> new EntityNotFoundException("Tax category not found"));
+        }
+
+        Product product = ProductMapper.toEntity(dto, store, category, taxCategory);
         return ProductMapper.toDto(productRepository.save(product));
     }
 
@@ -71,6 +81,17 @@ public class ProductServiceImpl implements ProductService {
         existing.setImage(dto.getImage());
         existing.setCategory(category);
 
+        // Handle tax category update
+        if (dto.getTaxCategoryId() != null) {
+            TaxCategory taxCategory = taxCategoryRepository.findById(dto.getTaxCategoryId())
+                    .orElseThrow(() -> new EntityNotFoundException("Tax category not found"));
+            existing.setTaxCategory(taxCategory);
+        } else {
+            existing.setTaxCategory(null);
+        }
+        
+        // Handle tax exempt flag
+        existing.setTaxExempt(dto.getTaxExempt() != null ? dto.getTaxExempt() : false);
 
         if (dto.getStoreId() != null) {
             Store store = storeRepository.findById(dto.getStoreId())

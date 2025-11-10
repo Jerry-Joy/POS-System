@@ -40,6 +40,14 @@ public class Product {
     private Category category;
 
     @ManyToOne
+    @JoinColumn(name = "tax_category_id")
+    private TaxCategory taxCategory; // Tax category for this product
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean taxExempt = false; // Whether this product is tax-exempt
+
+    @ManyToOne
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
