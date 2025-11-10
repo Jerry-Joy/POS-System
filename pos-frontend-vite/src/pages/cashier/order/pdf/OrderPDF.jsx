@@ -99,6 +99,49 @@ export const OrderPDF = ({ order }) => (
           ))}
         </View>
       </View>
+
+      <View style={styles.summarySection}>
+        <View style={styles.summaryRow}>
+          <Text style={styles.summaryLabel}>Subtotal:</Text>
+          <Text style={styles.summaryValue}>${order.subtotal?.toFixed(2) || "0.00"}</Text>
+        </View>
+        
+        <View style={styles.summaryRow}>
+          <Text style={styles.summaryLabel}>Tax:</Text>
+          <Text style={styles.summaryValue}>${order.tax?.toFixed(2) || "0.00"}</Text>
+        </View>
+        
+        {order.taxBreakdown && order.taxBreakdown.length > 0 && (
+          <View style={styles.taxBreakdownSection}>
+            {order.taxBreakdown.map((item, index) => (
+              <View key={index} style={styles.taxBreakdownRow}>
+                <Text style={styles.taxBreakdownLabel}>
+                  • {item.categoryName || 'Default'} ({item.taxPercentage}%):
+                </Text>
+                <Text style={styles.taxBreakdownValue}>
+                  ${item.taxAmount?.toFixed(2) || "0.00"}
+                </Text>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {order.discount > 0 && (
+          <View style={styles.summaryRow}>
+            <Text style={[styles.summaryLabel, styles.discountText]}>
+              Discount{order.loyaltyPointsUsed > 0 ? ` (${order.loyaltyPointsUsed} points)` : ''}:
+            </Text>
+            <Text style={[styles.summaryValue, styles.discountText]}>
+              -${order.discount?.toFixed(2) || "0.00"}
+            </Text>
+          </View>
+        )}
+
+        <View style={styles.totalRow}>
+          <Text style={styles.totalLabel}>Total Amount Paid:</Text>
+          <Text style={styles.totalValue}>${order.totalAmount?.toFixed(2) || "0.00"}</Text>
+        </View>
+      </View>
     </Page>
   </Document>
 );

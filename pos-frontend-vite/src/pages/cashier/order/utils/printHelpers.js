@@ -39,6 +39,17 @@ export const buildReceiptMarkup = (order) => {
 
   const paymentLabel = getPaymentModeLabel(order.paymentType);
 
+  // Build tax breakdown markup
+  const taxBreakdown = order.taxBreakdown || [];
+  const taxBreakdownMarkup = taxBreakdown.length > 0
+    ? taxBreakdown.map(item => `
+        <div class="row" style="font-size: 11px; padding-left: 12px;">
+          <span>• ${item.categoryName || 'Default'} (${item.taxPercentage}%)</span>
+          <span>${formatCurrency(item.taxAmount)}</span>
+        </div>
+      `).join('')
+    : '';
+
   return `
     <style>
       @page { size: 80mm auto; margin: 5mm; }
@@ -113,6 +124,7 @@ export const buildReceiptMarkup = (order) => {
             <span>Tax</span>
             <span>${formatCurrency(order.tax)}</span>
           </div>
+          ${taxBreakdownMarkup}
           ${order.discount > 0 ? `<div class="row"><span>Discount</span><span>-${formatCurrency(order.discount)}</span></div>` : ""}
           <div class="grand-total">
             <span>Total Paid</span>

@@ -130,4 +130,62 @@ export const styles = StyleSheet.create({
     fontSize: 10,
     color: "#6b7280",
   },
+  summarySection: {
+    marginTop: 20,
+    marginLeft: "auto",
+    width: "50%",
+    padding: 15,
+    border: "1px solid #e5e7eb",
+    borderRadius: 5,
+  },
+  summaryRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 8,
+    fontSize: 12,
+  },
+  summaryLabel: {
+    color: "#6b7280",
+  },
+  summaryValue: {
+    color: "#111827",
+    fontWeight: "bold",
+  },
+  taxBreakdownSection: {
+    marginLeft: 15,
+    marginBottom: 8,
+  },
+  taxBreakdownRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 4,
+    fontSize: 10,
+  },
+  taxBreakdownLabel: {
+    color: "#9ca3af",
+  },
+  taxBreakdownValue: {
+    color: "#6b7280",
+  },
+  discountText: {
+    color: "#059669",
+  },
+  totalRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: "#e5e7eb",
+  },
+  totalLabel: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#111827",
+  },
+  totalValue: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#059669",
+  },
 });

@@ -17,6 +17,7 @@ const OrderItemTable = ({ selectedOrder }) => {
   const discount = selectedOrder?.discount || 0;
   const loyaltyPointsUsed = selectedOrder?.loyaltyPointsUsed || 0;
   const totalAmount = selectedOrder?.totalAmount || 0;
+  const taxBreakdown = selectedOrder?.taxBreakdown || [];
 
   return (
     <div className="w-full">
@@ -91,9 +92,22 @@ const OrderItemTable = ({ selectedOrder }) => {
             <span className="font-medium">${subtotal.toFixed(2)}</span>
           </div>
 
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Tax (18% GST):</span>
-            <span className="font-medium">${tax.toFixed(2)}</span>
+          {/* Tax Breakdown */}
+          <div className="space-y-1">
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Tax:</span>
+              <span className="font-medium">${tax.toFixed(2)}</span>
+            </div>
+            {taxBreakdown.length > 0 && (
+              <div className="pl-4 space-y-1">
+                {taxBreakdown.map((item, index) => (
+                  <div key={index} className="flex justify-between text-xs text-muted-foreground">
+                    <span>• {item.categoryName || 'Default'} ({item.taxPercentage}%):</span>
+                    <span>${item.taxAmount.toFixed(2)}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {discount > 0 && (
