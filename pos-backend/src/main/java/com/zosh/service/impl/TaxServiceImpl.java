@@ -47,7 +47,8 @@ public class TaxServiceImpl implements TaxService {
             
             // If no tax category, use branch's default tax percentage
             if (taxCategory == null) {
-                taxCategory = getOrCreateDefaultTaxCategory(branch.getStore().getId(), branch.getTaxPercentage());
+                Double branchTaxPercentage = branch.getTaxPercentage() != null ? branch.getTaxPercentage() : 18.0;
+                taxCategory = getOrCreateDefaultTaxCategory(branch.getStore().getId(), branchTaxPercentage);
             }
 
             // Accumulate amounts by tax category
@@ -74,7 +75,7 @@ public class TaxServiceImpl implements TaxService {
             result.getBreakdown().add(TaxCalculationResult.TaxBreakdownItem.builder()
                     .taxCategoryId(taxCategory.getId())
                     .taxCategoryName(taxCategory.getName())
-                    .percentage(taxCategory.getPercentage())
+                    .percentage(taxCategory.getPercentage() != null ? taxCategory.getPercentage() : 0.0)
                     .taxableAmount(taxableAmount)
                     .taxAmount(taxAmount)
                     .build());
@@ -165,7 +166,9 @@ public class TaxServiceImpl implements TaxService {
      * Used when a product doesn't have a specific tax category
      */
     private TaxCategory getOrCreateDefaultTaxCategory(Long storeId, Double percentage) {
-        String categoryName = "Tax " + percentage + "%";
+        // Ensure percentage is never null
+        Double safePercentage = percentage != null ? percentage : 18.0;
+        String categoryName = "Tax " + safePercentage + "%";
         
         return taxCategoryRepository.findByStoreIdAndName(storeId, categoryName)
                 .orElseGet(() -> {
@@ -175,7 +178,7 @@ public class TaxServiceImpl implements TaxService {
                     TaxCategory newCategory = TaxCategory.builder()
                             .name(categoryName)
                             .description("Auto-generated tax category")
-                            .percentage(percentage)
+                            .percentage(safePercentage)
                             .taxType(TaxType.EXCLUSIVE)
                             .isActive(true)
                             .store(store)

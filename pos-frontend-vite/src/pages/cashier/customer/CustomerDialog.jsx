@@ -39,7 +39,7 @@ const CustomerDialog = ({
       setShowCustomerDialog(false);
       toast({
         title: "Customer Selected",
-        description: `${customer.name} selected for this order`,
+        description: `${customer.fullName} selected for this order`,
       });
     };
 

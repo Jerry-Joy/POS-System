@@ -113,12 +113,15 @@ public class OrderServiceImpl implements OrderService {
             TaxCategory taxCategory = new TaxCategory();
             taxCategory.setId(breakdownItem.getTaxCategoryId());
             
+            // Ensure percentage is never null
+            Double percentage = breakdownItem.getPercentage() != null ? breakdownItem.getPercentage() : 0.0;
+            
             OrderTaxBreakdown breakdown = OrderTaxBreakdown.builder()
                     .order(savedOrder)
                     .taxCategory(taxCategory)
                     .taxableAmount(breakdownItem.getTaxableAmount())
                     .taxAmount(breakdownItem.getTaxAmount())
-                    .taxPercentage(breakdownItem.getPercentage())
+                    .taxPercentage(percentage)
                     .taxCategoryName(breakdownItem.getTaxCategoryName())
                     .build();
             
