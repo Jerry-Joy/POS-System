@@ -34,6 +34,7 @@ public class StoreController {
 
     // 🔹 Create Store
     @PostMapping
+    @PreAuthorize("hasAuthority('STORE_ADMIN')")
     public ResponseEntity<StoreDTO> createStore(@Valid @RequestBody StoreDTO storeDto,
                                                 @RequestHeader("Authorization") String jwt) throws UserException {
         User user = userService.getUserFromJwtToken(jwt);
@@ -50,6 +51,7 @@ public class StoreController {
 
     // 🔹 Update Store
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('STORE_ADMIN')")
     public ResponseEntity<StoreDTO> updateStore(
             @PathVariable Long id,
             @RequestBody StoreDTO storeDto)
@@ -60,6 +62,7 @@ public class StoreController {
 
     // 🔹 Delete Store
     @DeleteMapping()
+    @PreAuthorize("hasAuthority('STORE_ADMIN')")
     public ResponseEntity<ApiResponse> deleteStore()
             throws ResourceNotFoundException, UserException {
         storeService.deleteStore();

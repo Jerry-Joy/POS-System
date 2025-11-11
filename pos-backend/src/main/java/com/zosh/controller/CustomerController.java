@@ -5,6 +5,7 @@ import com.zosh.modal.Customer;
 import com.zosh.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,12 +18,14 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('STORE_MANAGER', 'BRANCH_MANAGER', 'BRANCH_CASHIER')")
     public ResponseEntity<Customer> create(
             @RequestBody Customer customer) {
         return ResponseEntity.ok(customerService.createCustomer(customer));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('STORE_MANAGER', 'BRANCH_MANAGER', 'BRANCH_CASHIER')")
     public ResponseEntity<Customer> update(
             @PathVariable Long id,
             @RequestBody Customer customer
@@ -31,6 +34,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('STORE_ADMIN', 'BRANCH_MANAGER')")
     public ResponseEntity<String> delete(
             @PathVariable Long id
     ) throws ResourceNotFoundException {
@@ -51,6 +55,7 @@ public class CustomerController {
     }
 
     @PostMapping("/{id}/loyalty-points/add")
+    @PreAuthorize("hasAnyAuthority('BRANCH_CASHIER', 'STORE_MANAGER', 'BRANCH_MANAGER')")
     public ResponseEntity<Customer> addLoyaltyPoints(
             @PathVariable Long id,
             @RequestParam Integer points
@@ -59,6 +64,7 @@ public class CustomerController {
     }
 
     @PostMapping("/{id}/loyalty-points/redeem")
+    @PreAuthorize("hasAnyAuthority('BRANCH_CASHIER', 'STORE_MANAGER', 'BRANCH_MANAGER')")
     public ResponseEntity<Customer> redeemLoyaltyPoints(
             @PathVariable Long id,
             @RequestParam Integer points

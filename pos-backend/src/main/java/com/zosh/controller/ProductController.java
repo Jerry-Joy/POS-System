@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class ProductController {
     private final UserService userService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('STORE_ADMIN')")
     public ResponseEntity<ProductDTO> create(
             @Valid @RequestBody ProductDTO dto,
             @RequestHeader("Authorization") String jwt
@@ -40,6 +42,7 @@ public class ProductController {
 
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('STORE_ADMIN')")
     public ResponseEntity<ProductDTO> update(@PathVariable Long id,
                                              @RequestBody ProductDTO dto,
 
@@ -49,6 +52,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('STORE_ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id,
                                        @RequestHeader("Authorization") String jwt) throws UserException, AccessDeniedException {
         User user = userService.getUserFromJwtToken(jwt);

@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
@@ -8,31 +9,33 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LineChart, Line } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { Search, Filter, Calendar, Download, Plus, Edit, Trash2, CreditCard, DollarSign, User, Store } from "lucide-react";
+import { Search, Filter, Calendar, Download, Plus, Edit, Trash2, CreditCard, DollarSign, User, Store, Eye, FileText } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { 
   getStoreOverview, 
   getDailySales, 
-  getSalesByPaymentMethod 
+  getSalesByPaymentMethod,
+  getRecentSales
 } from "@/Redux Toolkit/features/storeAnalytics/storeAnalyticsThunks";
 import { useToast } from "@/components/ui/use-toast";
 
 export default function Sales() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const { userProfile } = useSelector((state) => state.user);
   const { 
     storeOverview, 
     dailySales, 
-    salesByPaymentMethod, 
+    salesByPaymentMethod,
+    recentSales,
     loading 
   } = useSelector((state) => state.storeAnalytics);
 
-
-  useEffect(() => {
-    if (userProfile?.id) {
-      fetchSalesData();
-    }
-  }, [userProfile]);
+  const [dateRange, setDateRange] = useState("7days");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [isOrderDialogOpen, setIsOrderDialogOpen] = useState(false);
 
   const fetchSalesData = async () => {
     try {
@@ -40,6 +43,7 @@ export default function Sales() {
         dispatch(getStoreOverview(userProfile.id)).unwrap(),
         dispatch(getDailySales(userProfile.id)).unwrap(),
         dispatch(getSalesByPaymentMethod(userProfile.id)).unwrap(),
+        dispatch(getRecentSales({ storeAdminId: userProfile.id, limit: 10 })).unwrap(),
       ]);
     } catch (err) {
       toast({
@@ -49,6 +53,13 @@ export default function Sales() {
       });
     }
   };
+
+  useEffect(() => {
+    if (userProfile?.id) {
+      fetchSalesData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userProfile?.id]);
 
   // Format currency
   const formatCurrency = (amount) => {
@@ -93,15 +104,74 @@ export default function Sales() {
     },
   };
 
+  // Format payment method label
+  const getPaymentLabel = (method) => {
+    const labels = {
+      CASH: "Cash",
+      CARD: "Card",
+      MOBILE_MONEY: "Mobile Money",
+      BANK_TRANSFER: "Bank Transfer",
+      UPI: "UPI",
+      WALLET: "Wallet"
+    };
+    return labels[method] || method;
+  };
+
+  // Get payment status badge
+  const getStatusBadge = (status) => {
+    const statusConfig = {
+      COMPLETED: { label: "Completed", variant: "default", className: "bg-green-100 text-green-800" },
+      PENDING: { label: "Pending", variant: "secondary", className: "bg-yellow-100 text-yellow-800" },
+      CANCELLED: { label: "Cancelled", variant: "destructive", className: "bg-red-100 text-red-800" },
+    };
+    const config = statusConfig[status] || statusConfig.COMPLETED;
+    return (
+      <Badge variant={config.variant} className={config.className}>
+        {config.label}
+      </Badge>
+    );
+  };
+
+  // Filter recent sales
+  const filteredSales = recentSales?.filter(sale =>
+    sale.orderId?.toString().includes(searchTerm) ||
+    sale.branchName?.toLowerCase().includes(searchTerm.toLowerCase())
+  ) || [];
+
+  // Handle view order details
+  const handleViewOrder = (order) => {
+    setSelectedOrder(order);
+    setIsOrderDialogOpen(true);
+  };
+
   console.log("sales daily", dailySales)
+  console.log("recent sales", recentSales)
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold tracking-tight">Sales Management</h1>
-        <Button className="bg-emerald-600 hover:bg-emerald-700">
-          <Plus className="mr-2 h-4 w-4" /> New Sale
-        </Button>
+      <div className="flex justify-between items-center flex-wrap gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Sales Management</h1>
+          <p className="text-muted-foreground mt-1">Monitor your store's sales performance and analytics</p>
+        </div>
+        <div className="flex gap-2">
+          <Select value={dateRange} onValueChange={setDateRange}>
+            <SelectTrigger className="w-[160px]">
+              <Calendar className="mr-2 h-4 w-4" />
+              <SelectValue placeholder="Select period" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="today">Today</SelectItem>
+              <SelectItem value="yesterday">Yesterday</SelectItem>
+              <SelectItem value="7days">Last 7 Days</SelectItem>
+              <SelectItem value="30days">Last 30 Days</SelectItem>
+              <SelectItem value="custom">Custom Range</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button variant="outline">
+            <Download className="mr-2 h-4 w-4" /> Export Report
+          </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -331,6 +401,116 @@ export default function Sales() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Recent Sales Table */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg">Recent Orders</CardTitle>
+            <div className="flex gap-2">
+              <div className="relative">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="search"
+                  placeholder="Search orders..."
+                  className="pl-8 w-[250px]"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="h-64 flex items-center justify-center">
+              <div className="text-center">
+                <div className="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+                <p className="mt-2 text-gray-500">Loading orders...</p>
+              </div>
+            </div>
+          ) : filteredSales.length > 0 ? (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Order ID</TableHead>
+                    <TableHead>Date & Time</TableHead>
+                    <TableHead>Customer</TableHead>
+                    <TableHead>Branch</TableHead>
+                    <TableHead>Payment</TableHead>
+                    <TableHead className="text-right">Amount</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredSales.map((sale) => (
+                    <TableRow key={sale.orderId}>
+                      <TableCell className="font-medium">
+                        #{sale.orderId}
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm">
+                          <div>{new Date(sale.createdAt).toLocaleDateString()}</div>
+                          <div className="text-muted-foreground">
+                            {new Date(sale.createdAt).toLocaleTimeString([], { 
+                              hour: '2-digit', 
+                              minute: '2-digit' 
+                            })}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <User className="h-4 w-4 text-muted-foreground" />
+                          <span>Walk-in Customer</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Store className="h-4 w-4 text-muted-foreground" />
+                          <span>{sale.branchName || 'N/A'}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="font-normal">
+                          {getPaymentLabel(sale.paymentType)}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right font-semibold">
+                        {formatCurrency(sale.totalAmount)}
+                      </TableCell>
+                      <TableCell>
+                        {getStatusBadge('COMPLETED')}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleViewOrder(sale)}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          ) : (
+            <div className="h-64 flex flex-col items-center justify-center text-center">
+              <FileText className="h-12 w-12 text-muted-foreground mb-4" />
+              <h3 className="text-lg font-semibold mb-2">No Orders Found</h3>
+              <p className="text-sm text-muted-foreground max-w-md">
+                {searchTerm 
+                  ? "No orders match your search criteria. Try adjusting your search."
+                  : "There are no recent orders to display. Orders will appear here once sales are made."}
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
     
     </div>

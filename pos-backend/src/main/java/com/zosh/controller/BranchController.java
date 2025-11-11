@@ -29,6 +29,7 @@ public class BranchController {
 
     // 🔹 Create Branch
     @PostMapping
+    @PreAuthorize("hasAuthority('STORE_ADMIN')")
     public ResponseEntity<BranchDTO> createBranch(
             @Valid @RequestBody BranchDTO dto,
 
@@ -55,6 +56,7 @@ public class BranchController {
 
     // 🔹 Update Branch
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('STORE_ADMIN', 'STORE_MANAGER')")
     public ResponseEntity<BranchDTO> updateBranch(
             @PathVariable Long id,
             @RequestBody BranchDTO dto,
@@ -65,6 +67,7 @@ public class BranchController {
 
     // 🔹 Delete Branch
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('STORE_ADMIN')")
     public ResponseEntity<Void> deleteBranch(@PathVariable Long id) {
         branchService.deleteBranch(id);
         return ResponseEntity.noContent().build();

@@ -6,6 +6,7 @@ import com.zosh.service.TaxService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,12 +20,14 @@ public class TaxCategoryController {
     private final TaxService taxService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('STORE_ADMIN')")
     public ResponseEntity<TaxCategoryDTO> createTaxCategory(@RequestBody TaxCategoryDTO dto) {
         TaxCategoryDTO created = taxCategoryService.createTaxCategory(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('STORE_ADMIN')")
     public ResponseEntity<TaxCategoryDTO> updateTaxCategory(
             @PathVariable Long id,
             @RequestBody TaxCategoryDTO dto) {
@@ -51,24 +54,28 @@ public class TaxCategoryController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('STORE_ADMIN')")
     public ResponseEntity<Void> deleteTaxCategory(@PathVariable Long id) {
         taxCategoryService.deleteTaxCategory(id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/activate")
+    @PreAuthorize("hasAuthority('STORE_ADMIN')")
     public ResponseEntity<Void> activateTaxCategory(@PathVariable Long id) {
         taxCategoryService.activateTaxCategory(id);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}/deactivate")
+    @PreAuthorize("hasAuthority('STORE_ADMIN')")
     public ResponseEntity<Void> deactivateTaxCategory(@PathVariable Long id) {
         taxCategoryService.deactivateTaxCategory(id);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/store/{storeId}/init-defaults")
+    @PreAuthorize("hasAuthority('STORE_ADMIN')")
     public ResponseEntity<String> initializeDefaultTaxCategories(@PathVariable Long storeId) {
         taxService.createDefaultTaxCategories(storeId);
         return ResponseEntity.ok("Default tax categories created successfully");
